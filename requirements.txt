@@ -1,0 +1,8 @@
+tensorflow
+scikit-learn
+matplotlib
+pandas
+fairlearn
+cvxpy
+tempeh
+ipython
