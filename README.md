@@ -12,10 +12,31 @@
 
 ## Projects
 
-### Human Ethical Bias Detection with Machine Learning Software.
+### FairBalance: Mitigating Machine Learning Bias Against Multiple Protected Attributes With Data Balancing.
 
-Aug 2021 | [repo](https://github.com/hil-se/fairness#top)
+Aug 2021 | [repo](https://github.com/hil-se/FairBalance#top)
 
-Instead of trying to reduce bias in machine learning software, this project aims to reduce bias from its source--- the human decisions.
- - That is, this work proposes to utilize the machine learning bias inherited from the training data (human decisions) as an indicator for detecting human bias.
- - While it is difficult to directly test whether a human has bias, with current research on machine learning bias, it is now easy to test, in large scale at low cost, whether a machine learning software has bias.
+#### Usage
+0. Install dependencies:
+```
+pip install -r requirements.txt
+```
+1. Navigate to the source code:
+```
+cd src
+```
+2. RQ1: Can FairBalance mitigate bias against multiple protected attributes?
+```
+python main.py RQ1
+```
+3. RQ2: How does FairBalance perform comparing with the existing state-of-the-art bias mitigation algorithms?
+```
+python main.py RQ2
+```
+4. Run one single experiment with specific ML algorithm (e.g. Logistic Regression), dataset (e.g. Compas), bias mitigation algorithm (e.g. FairBalance), targeted attribute (e.g. None), and number of repeats (e.g. 1): 
+```
+python main.py one_exp LR compas FairBalance None 1
+```
+
+#### Acknowledgement
+This work is built on [AIF360](https://github.com/Trusted-AI/AIF360). It is a great platform facilitating the creation and reproduction of AI bias mitigation algorithms.
