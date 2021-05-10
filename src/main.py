@@ -15,6 +15,7 @@ def one_exp(treatment, data, fair_balance, target="", repeats=50):
     #     fair_balance in {"None", "FairBalance", "Reweighing", "AdversialDebiasing", "RejectOptionClassification"}
     #     target = target protected attribute, not used if fair_balance == "FairBlance" or "None"
     #     repeats = number of times repeating the experiments
+    np.random.seed(10)
     exp = Experiment(treatment, data=data, fair_balance=fair_balance, target_attribute=target)
     results = {}
     for _ in range(repeats):
@@ -66,7 +67,7 @@ def RQ2():
         pickle.dump(results, p)
     parse_results_RQ2()
 
-def parse_results_RQ1():
+def parse_results_RQ1(iqr="True"):
     # Parse results of RQ1 and save as csv files.
     with open("../dump/RQ1.pickle", "rb") as p:
         results = pickle.load(p)
@@ -80,17 +81,17 @@ def parse_results_RQ1():
 
     # Calculate medians and iqrs of 30 repeats
     medians = copy.deepcopy(results)
-    medians = median_dict(medians, True)
+    medians = median_dict(medians, use_iqr = iqr=="True")
     median_df = dict2dfRQ1(medians)
     median_df.to_csv("../results/RQ1_median.csv", index=False)
 
-def parse_results_RQ2():
+def parse_results_RQ2(iqr="True"):
     # Parse results of RQ2 and save as csv files.
     with open("../dump/RQ2.pickle", "rb") as p:
         results = pickle.load(p)
     # Calculate medians and iqrs of 30 repeats
     medians = copy.deepcopy(results)
-    medians = median_dict(medians, True)
+    medians = median_dict(medians, use_iqr = iqr=="True")
     median_df = dict2dfRQ2(medians)
     median_df.to_csv("../results/RQ2_median.csv", index=False)
 

@@ -35,6 +35,7 @@ class Experiment:
         self.y = self.data.labels.ravel()
 
 
+
     def run(self):
         data_train, data_test = self.data.split([0.7], shuffle=True)
 
@@ -103,7 +104,8 @@ class Experiment:
                 return aa / float(aa+bb)
 
         result = {}
-        target = X_test.unfavorable_label
+        # Get target label (for calculating the confusion matrix)
+        target = max(set( X_test.labels.ravel()))
         pp = preds == target
         np = preds != target
         pg = truth == target

@@ -68,18 +68,18 @@ def compare_dict(results):
             y[key] = is_larger(yy, xx)
     return results
 
-def median_dict(results, iqr = True):
+def median_dict(results, use_iqr = True):
     # Compute median value of lists in the dictionary
     for key in results:
         if type(results[key]) == dict:
-            results[key] = median_dict(results[key])
+            results[key] = median_dict(results[key], use_iqr = use_iqr)
         else:
             med = np.median(results[key])
-            if iqr:
+            if use_iqr:
                 iqr = np.percentile(results[key],75)-np.percentile(results[key],25)
-                results[key] = "%.2f (%.2f)" % (med, iqr)
+                results[key] = "%d (%d)" % (med*100, iqr*100)
             else:
-                results[key] = "%.2f" % (med)
+                results[key] = "%d" % (med*100)
     return results
 
 def mean_dict(results, std = True):
