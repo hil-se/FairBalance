@@ -74,7 +74,7 @@ class Experiment:
 
         if self.fair_balance=="RejectOptionClassification":
             pos_ind = numpy.where(self.model.classes_ == self.data.favorable_label)[0][0]
-            data_train_pred = data_train.copy(deepcopy=True)
+            data_train_pred = dataset_transf_train.copy(deepcopy=True)
             data_train_pred.scores = self.model.predict_proba(X_train)[:,pos_ind].reshape(-1,1)
             data_test_pred = data_test.copy(deepcopy=True)
             data_test_pred.scores = self.model.predict_proba(X_test)[:, pos_ind].reshape(-1, 1)
@@ -87,7 +87,7 @@ class Experiment:
                                               num_class_thresh=100, num_ROC_margin=50,
                                               metric_name=metric_name,
                                               metric_ub=metric_ub, metric_lb=metric_lb)
-            ROC = ROC.fit(data_train, data_train_pred)
+            ROC = ROC.fit(dataset_transf_train, data_train_pred)
             preds = ROC.predict(data_test_pred).labels.ravel()
 
         y_test = data_test.labels.ravel()
