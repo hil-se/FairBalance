@@ -1,22 +1,22 @@
 Dataset,Algorithm,F1,Accuracy,Sex: AOD,Sex: EOD,Sex: SPD,Race: AOD,Race: EOD,Race: SPD,Age: AOD,Age: EOD,Age: SPD
-compas,Reweighing: sex,61 (1),65 (1),5 (9),8 (8),8 (10),22 (3),25 (4),26 (2),,,
-compas,Reweighing: race,62 (1),65 (1),23 (3),25 (6),26 (3),1 (4),4 (4),5 (3),,,
-compas,AdversialDebiasing: sex,61 (2),66 (1),33 (18),42 (20),35 (16),24 (7),28 (7),27 (7),,,
-compas,AdversialDebiasing: race,61 (1),64 (1),21 (10),24 (11),24 (8),8 (24),12 (20),12 (23),,,
-compas,RejectOptionClassification: sex,62 (2),65 (0),0 (4),3 (7),3 (4),23 (2),25 (3),26 (2),,,
-compas,RejectOptionClassification: race,63 (2),65 (1),24 (3),26 (5),27 (3),0 (3),3 (5),2 (3),,,
-compas,FairBalance,63 (2),64 (1),4 (6),4 (7),7 (6),8 (9),9 (9),11 (9),,,
-adult,Reweighing: sex,86 (0),78 (0),0 (2),0 (0),6 (1),12 (7),6 (1),12 (3),,,
-adult,Reweighing: race,87 (0),80 (0),29 (0),11 (0),22 (0),1 (1),0 (0),4 (1),,,
-adult,AdversialDebiasing: sex,86 (0),79 (0),3 (1),1 (0),8 (1),14 (2),8 (1),13 (1),,,
-adult,AdversialDebiasing: race,87 (0),80 (0),28 (0),11 (0),22 (0),0 (7),0 (2),3 (3),,,
-adult,RejectOptionClassification: sex,76 (1),69 (1),-4 (2),-5 (2),3 (1),17 (4),17 (2),21 (3),,,
-adult,RejectOptionClassification: race,79 (0),71 (0),33 (2),30 (2),38 (1),-3 (2),-1 (2),2 (2),,,
-adult,FairBalance,82 (0),74 (0),-1 (1),-1 (0),7 (0),0 (1),1 (1),5 (1),,,
-german,Reweighing: sex,10 (9),69 (3),-3 (8),-3 (11),-3 (7),,,,21 (12),17 (22),21 (12)
-german,Reweighing: age,2 (6),68 (2),0 (4),0 (5),0 (3),,,,0 (2),0 (4),0 (2)
-german,AdversialDebiasing: sex,34 (16),63 (8),-44 (78),-54 (96),-39 (69),,,,0 (30),1 (38),2 (27)
-german,AdversialDebiasing: age,35 (15),65 (36),7 (39),7 (47),6 (38),,,,-4 (154),-4 (159),-2 (153)
-german,RejectOptionClassification: sex,51 (4),59 (1),-1 (14),-1 (15),0 (11),,,,17 (12),12 (16),21 (12)
-german,RejectOptionClassification: age,49 (4),59 (3),5 (10),5 (13),7 (11),,,,-4 (10),-6 (20),0 (11)
-german,FairBalance,50 (4),60 (2),2 (6),3 (7),4 (7),,,,9 (8),8 (10),13 (9)
+compas,Reweighing: sex,62 (1),66 (1),1 (6),7 (12),5 (7),23 (4),25 (5),27 (5),,,
+compas,Reweighing: race,62 (1),65 (1),24 (2),28 (7),27 (2),0 (2),3 (4),4 (2),,,
+compas,AdversialDebiasing: sex,61 (3),65 (1),31 (14),39 (22),34 (12),25 (5),27 (7),28 (4),,,
+compas,AdversialDebiasing: race,62 (1),64 (1),16 (9),17 (12),19 (10),0 (19),3 (20),2 (19),,,
+compas,RejectOptionClassification: sex,62 (2),65 (1),-1 (11),-1 (14),1 (12),24 (4),26 (4),28 (3),,,
+compas,RejectOptionClassification: race,63 (1),65 (1),23 (4),26 (12),28 (3),-1 (4),1 (7),2 (3),,,
+compas,FairBalance,64 (0),64 (1),2 (5),4 (12),6 (6),8 (10),9 (7),12 (11),,,
+adult,Reweighing: sex,49 (1),78 (0),1 (2),1 (4),-5 (0),-18 (5),-29 (9),-14 (2),,,
+adult,Reweighing: race,49 (1),80 (0),-28 (0),-46 (1),-22 (0),0 (1),0 (3),-4 (0),,,
+adult,AdversialDebiasing: sex,50 (0),79 (0),-3 (0),-5 (1),-8 (0),-14 (1),-21 (2),-13 (0),,,
+adult,AdversialDebiasing: race,48 (0),80 (0),-28 (0),-46 (0),-22 (0),0 (3),1 (6),-3 (0),,,
+adult,RejectOptionClassification: sex,53 (0),69 (1),4 (1),2 (2),-3 (1),-15 (1),-14 (3),-21 (2),,,
+adult,RejectOptionClassification: race,56 (0),71 (0),-32 (0),-36 (1),-38 (0),4 (2),4 (2),-1 (3),,,
+adult,FairBalance,54 (1),74 (0),0 (1),0 (2),-6 (0),0 (0),1 (2),-5 (1),,,
+german,Reweighing: sex,10 (10),69 (2),-2 (5),-2 (7),-1 (4),,,,20 (29),17 (30),20 (29)
+german,Reweighing: age,1 (6),70 (3),0 (3),0 (4),0 (2),,,,0 (3),-1 (4),0 (2)
+german,AdversialDebiasing: sex,29 (10),69 (3),11 (67),21 (81),8 (61),,,,19 (22),18 (19),21 (21)
+german,AdversialDebiasing: age,32 (14),67 (8),13 (17),16 (38),10 (11),,,,33 (111),44 (137),33 (100)
+german,RejectOptionClassification: sex,51 (6),58 (4),-2 (6),-4 (10),1 (7),,,,13 (12),13 (8),19 (8)
+german,RejectOptionClassification: age,48 (4),56 (4),1 (7),2 (5),2 (8),,,,1 (5),2 (18),6 (9)
+german,FairBalance,49 (6),60 (1),3 (3),2 (7),5 (2),,,,9 (3),9 (6),16 (6)

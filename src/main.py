@@ -8,19 +8,20 @@ from utils import *
 from experiment import Experiment
 
 
-def one_exp(treatment, data, fair_balance, target="", repeats=50):
+def one_exp(treatment, data, fair_balance, target="", repeats=10):
     # Conduct one experiment:
     #     treatment in {"SVM", "RF", "LR", "DT"}
     #     data in {"compas", "adult", "german"}
     #     fair_balance in {"None", "FairBalance", "Reweighing", "AdversialDebiasing", "RejectOptionClassification"}
     #     target = target protected attribute, not used if fair_balance == "FairBlance" or "None"
     #     repeats = number of times repeating the experiments
-    np.random.seed(10)
+
     exp = Experiment(treatment, data=data, fair_balance=fair_balance, target_attribute=target)
     results = {}
     for _ in range(repeats):
         result = exp.run()
-        results = merge_dict(results, result)
+        if result:
+            results = merge_dict(results, result)
     print(results)
     return results
 
@@ -35,7 +36,7 @@ def RQ1():
         for dataset in datasets:
             results[treatment][dataset] = {}
             for balance in balances:
-                results[treatment][dataset][balance] = one_exp(treatment, dataset, balance)
+                results[treatment][dataset][balance] = one_exp(treatment, dataset, balance, repeats=50)
                 # Print progress
                 print(treatment+", "+dataset+", "+balance)
     # dump results
@@ -60,8 +61,8 @@ def RQ2():
                     results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target)
             else:
                 results[dataset][balance] = one_exp(treatment, dataset, balance)
-                # Print progress
-                print(dataset + ", " + balance)
+            # Print progress
+            print(dataset + ", " + balance)
     # dump results
     with open("../dump/RQ2.pickle", "wb") as p:
         pickle.dump(results, p)

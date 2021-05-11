@@ -30,6 +30,7 @@ class Experiment:
 
         # No effect on FairBalance
         self.target_attribute = target_attribute
+
         self.data = data_loader[data]()
         self.X = self.data.features
         self.y = self.data.labels.ravel()
@@ -73,7 +74,7 @@ class Experiment:
             preds = self.model.predict(X_test)
 
         if self.fair_balance=="RejectOptionClassification":
-            pos_ind = numpy.where(self.model.classes_ == self.data.favorable_label)[0][0]
+            pos_ind = numpy.where(self.model.classes_ == dataset_transf_train.favorable_label)[0][0]
             data_train_pred = dataset_transf_train.copy(deepcopy=True)
             data_train_pred.scores = self.model.predict_proba(X_train)[:,pos_ind].reshape(-1,1)
             data_test_pred = data_test.copy(deepcopy=True)
@@ -87,8 +88,12 @@ class Experiment:
                                               num_class_thresh=100, num_ROC_margin=50,
                                               metric_name=metric_name,
                                               metric_ub=metric_ub, metric_lb=metric_lb)
-            ROC = ROC.fit(dataset_transf_train, data_train_pred)
+            try:
+                ROC.fit(dataset_transf_train, data_train_pred)
+            except:
+                return None
             preds = ROC.predict(data_test_pred).labels.ravel()
+
 
         y_test = data_test.labels.ravel()
         result = self.evaluate(numpy.array(preds), y_test, data_test)
@@ -105,7 +110,7 @@ class Experiment:
 
         result = {}
         # Get target label (for calculating the confusion matrix)
-        target = max(set( X_test.labels.ravel()))
+        target = max(set(self.y))
         pp = preds == target
         np = preds != target
         pg = truth == target
