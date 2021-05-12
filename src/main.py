@@ -16,6 +16,7 @@ def one_exp(treatment, data, fair_balance, target="", repeats=10):
     #     target = target protected attribute, not used if fair_balance == "FairBlance" or "None"
     #     repeats = number of times repeating the experiments
 
+    np.random.seed(2)
     exp = Experiment(treatment, data=data, fair_balance=fair_balance, target_attribute=target)
     results = {}
     for _ in range(repeats):
