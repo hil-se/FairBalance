@@ -1,22 +1,25 @@
 Dataset,Algorithm,F1,Accuracy,Sex: AOD,Sex: EOD,Sex: SPD,Race: AOD,Race: EOD,Race: SPD,Age: AOD,Age: EOD,Age: SPD
-compas,Reweighing: sex,62 (1),66 (1),6 (7),13 (7),9 (7),21 (5),26 (5),25 (4),,,
-compas,Reweighing: race,62 (1),66 (1),24 (3),27 (6),27 (3),2 (6),6 (3),6 (6),,,
-compas,AdversialDebiasing: sex,61 (1),65 (1),29 (7),35 (8),32 (7),25 (3),30 (4),29 (2),,,
-compas,AdversialDebiasing: race,62 (2),64 (1),17 (3),21 (6),21 (2),0 (15),3 (17),2 (13),,,
-compas,RejectOptionClassification: sex,62 (1),66 (1),0 (4),6 (6),4 (3),23 (4),27 (4),27 (4),,,
-compas,RejectOptionClassification: race,64 (1),65 (0),24 (3),26 (4),27 (2),0 (5),3 (5),2 (6),,,
-compas,FairBalance,63 (2),64 (1),2 (6),2 (6),7 (5),6 (9),8 (9),10 (8),,,
-adult,Reweighing: sex,49 (1),78 (0),0 (1),0 (3),-6 (0),-16 (10),-26 (18),-14 (5),,,
-adult,Reweighing: race,49 (0),80 (0),-28 (0),-46 (1),-21 (0),0 (2),0 (5),-4 (0),,,
-adult,AdversialDebiasing: sex,50 (0),79 (0),-3 (1),-6 (3),-8 (0),-15 (2),-23 (4),-14 (1),,,
-adult,AdversialDebiasing: race,49 (0),80 (0),-28 (0),-46 (1),-21 (1),0 (2),0 (3),-3 (1),,,
-adult,RejectOptionClassification: sex,53 (0),69 (0),4 (0),3 (0),-3 (1),-16 (3),-15 (4),-21 (1),,,
-adult,RejectOptionClassification: race,56 (0),72 (0),-32 (2),-35 (2),-38 (1),3 (1),5 (2),-3 (2),,,
-adult,FairBalance,54 (0),74 (0),0 (1),0 (3),-7 (1),-1 (1),0 (3),-6 (1),,,
-german,Reweighing: sex,6 (8),68 (3),-4 (6),-5 (7),-4 (5),,,,15 (17),11 (18),15 (17)
-german,Reweighing: age,0 (3),68 (3),0 (3),0 (4),1 (3),,,,0 (2),0 (2),-1 (1)
-german,AdversialDebiasing: sex,20 (15),68 (18),8 (85),14 (100),6 (80),,,,18 (40),16 (60),19 (36)
-german,AdversialDebiasing: age,25 (18),67 (26),4 (35),9 (50),3 (31),,,,11 (128),20 (142),10 (126)
-german,RejectOptionClassification: sex,53 (2),61 (1),0 (7),-4 (12),2 (7),,,,16 (13),15 (10),21 (11)
-german,RejectOptionClassification: age,51 (4),60 (2),9 (9),8 (9),10 (11),,,,-6 (12),-5 (18),0 (11)
-german,FairBalance,51 (3),60 (3),3 (7),3 (12),5 (6),,,,6 (6),4 (12),11 (6)
+compas,Reweighing: sex,62 (1),66 (0),5 (8),8 (7),8 (8),22 (2),26 (3),26 (2),,,
+compas,Reweighing: race,62 (1),65 (0),24 (4),28 (6),26 (3),0 (4),5 (6),5 (4),,,
+compas,AdversialDebiasing: sex,63 (2),66 (1),33 (10),40 (16),36 (9),25 (10),28 (9),29 (9),,,
+compas,AdversialDebiasing: race,62 (2),64 (1),21 (6),25 (10),24 (4),-1 (26),0 (27),2 (24),,,
+compas,RejectOptionClassification: sex,61 (1),64 (1),0 (9),4 (9),1 (9),24 (4),27 (4),27 (4),,,
+compas,RejectOptionClassification: race,63 (0),65 (1),22 (3),22 (6),25 (2),3 (2),6 (4),6 (3),,,
+compas,FairBalance,62 (0),65 (1),6 (3),5 (5),10 (4),-2 (4),0 (6),1 (3),,,
+compas,FairBalanceClass,63 (1),64 (0),4 (8),4 (10),8 (8),7 (11),10 (8),10 (11),,,
+adult,Reweighing: sex,49 (0),79 (0),0 (1),0 (2),-6 (0),-20 (11),-32 (19),-15 (5),,,
+adult,Reweighing: race,48 (0),80 (0),-29 (0),-46 (0),-22 (0),0 (0),1 (1),-4 (0),,,
+adult,AdversialDebiasing: sex,50 (0),79 (0),-2 (2),-4 (4),-8 (1),-14 (3),-20 (5),-13 (2),,,
+adult,AdversialDebiasing: race,49 (0),80 (0),-28 (0),-46 (1),-21 (0),1 (2),3 (5),-3 (1),,,
+adult,RejectOptionClassification: sex,53 (0),69 (0),4 (0),3 (0),-3 (0),-15 (1),-14 (2),-21 (1),,,
+adult,RejectOptionClassification: race,57 (0),72 (0),-34 (2),-38 (1),-39 (2),2 (1),3 (3),-3 (2),,,
+adult,FairBalance,50 (0),78 (0),0 (8),0 (12),-6 (4),0 (1),1 (2),-4 (1),,,
+adult,FairBalanceClass,54 (1),74 (0),1 (1),1 (1),-7 (0),0 (1),0 (3),-5 (1),,,
+german,Reweighing: sex,10 (8),68 (1),-5 (4),-6 (6),-4 (3),,,,21 (12),19 (14),22 (12)
+german,Reweighing: age,5 (7),69 (2),2 (4),6 (8),1 (3),,,,-1 (2),0 (4),0 (1)
+german,AdversialDebiasing: sex,35 (14),62 (16),-30 (90),-35 (103),-28 (85),,,,4 (53),7 (53),8 (54)
+german,AdversialDebiasing: age,34 (15),59 (37),-3 (34),-1 (45),-2 (34),,,,-28 (151),-32 (156),-26 (150)
+german,RejectOptionClassification: sex,54 (3),60 (2),-1 (9),-3 (9),2 (8),,,,20 (14),17 (12),23 (14)
+german,RejectOptionClassification: age,47 (4),55 (3),8 (2),4 (10),12 (5),,,,2 (10),1 (8),7 (11)
+german,FairBalance,0 (3),69 (2),0 (2),0 (0),0 (2),,,,0 (1),0 (2),0 (1)
+german,FairBalanceClass,52 (4),61 (3),3 (10),2 (10),3 (14),,,,5 (10),3 (13),10 (9)

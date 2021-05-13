@@ -48,24 +48,38 @@ def is_larger(x, y):
         else:
             return 3
 
-def compare_dict(results):
-    # Compare results between w/ and w/o FairBalance
-    x = results["FairBalance"]
-    y = results["None"]
-    for key in x:
-        if type(x[key]) == dict:
-            # Bias Metrics: lower the better
-            for key2 in x[key]:
-                xx = x[key][key2]
-                yy = y[key][key2]
-                x[key][key2] = is_larger(np.abs(yy), np.abs(xx))
-                y[key][key2] = is_larger(np.abs(xx), np.abs(yy))
+def compare_dict(results, baseline="None"):
+    # Check if results of non-baseline treatments are significantly better than the baseline
+
+    y = results[baseline]
+    for treatment in results:
+        if treatment==baseline:
+            continue
+        x = results[treatment]
+        for key in x:
+            if type(x[key]) == dict:
+                # Bias Metrics: lower the better
+                for key2 in x[key]:
+                    xx = x[key][key2]
+                    yy = y[key][key2]
+                    better = is_larger(np.abs(yy), np.abs(xx))
+                    if better == 0:
+                        better = -is_larger(np.abs(xx), np.abs(yy))
+                    x[key][key2] = better
+            else:
+                # General Metrics: higher the better
+                xx = x[key]
+                yy = y[key]
+                better = is_larger(xx, yy)
+                if better == 0:
+                    better = -is_larger(yy, xx)
+                x[key] = better
+    for key in y:
+        if type(y[key]) == dict:
+            for key2 in y[key]:
+                y[key][key2] = "n/a"
         else:
-            # General Metrics: higher the better
-            xx = x[key]
-            yy = y[key]
-            x[key] = is_larger(xx, yy)
-            y[key] = is_larger(yy, xx)
+            y[key] = "n/a"
     return results
 
 def median_dict(results, use_iqr = True):
@@ -98,16 +112,16 @@ def mean_dict(results, std = True):
 
 def dict2dfRQ1(results):
     # Generate a pandas dataframe based on the dictionary
-    columns = ["Algorithm", "Dataset", "FairBalance", "F1", "Accuracy", "Sex: AOD", "Sex: EOD", "Sex: SPD", "Race: AOD", "Race: EOD", "Race: SPD", "Age: AOD", "Age: EOD", "Age: SPD"]
+    columns = ["Algorithm", "Dataset", "Treatment", "F1", "Accuracy", "Sex: AOD", "Sex: EOD", "Sex: SPD", "Race: AOD", "Race: EOD", "Race: SPD", "Age: AOD", "Age: EOD", "Age: SPD"]
     df = {key:[] for key in columns}
     for treatment in results:
         for dataset in results[treatment]:
             # for balance in results[treatment][dataset]:
-            for balance in ["None", "FairBalance"]:
+            for balance in ["None", "FairBalance", "FairBalanceClass"]:
                 x = results[treatment][dataset][balance]
                 df["Algorithm"].append(treatment)
                 df["Dataset"].append(dataset)
-                df["FairBalance"].append("before" if balance=="None" else "after")
+                df["Treatment"].append(balance)
                 df["F1"].append(x["f1"])
                 df["Accuracy"].append(x["acc"])
                 if "sex" in x:

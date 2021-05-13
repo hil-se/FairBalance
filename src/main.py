@@ -27,9 +27,9 @@ def one_exp(treatment, data, fair_balance, target="", repeats=10):
 
 def RQ1():
     # Perform an overall experiment on different algorithms, datasets, and FairBalance settings.
-    treatments = ["LR", "SVM", "DT", "RF"]
+    treatments = ["LR", "SVM", "DT", "RF", "NB"]
     datasets = ["compas", "adult", "german"]
-    balances = ["None", "FairBalance"]
+    balances = ["None", "FairBalance", "FairBalanceClass"]
     results = {}
     for treatment in treatments:
         results[treatment] = {}
@@ -49,13 +49,13 @@ def RQ2():
     # Classifier is fixed to logistic regression.
     treatment = "LR"
     datasets = ["compas", "adult", "german"]
-    balances = ["Reweighing", "AdversialDebiasing", "RejectOptionClassification", "FairBalance"]
+    balances = ["Reweighing", "AdversialDebiasing", "RejectOptionClassification", "FairBalance", "FairBalanceClass"]
     targets = {"compas": ["sex", "race"], "adult": ["sex", "race"], "german": ["sex", "age"]}
     results = {}
     for dataset in datasets:
         results[dataset] = {}
         for balance in balances:
-            if balance!="FairBalance":
+            if balance!="FairBalance" and balance!="FairBalanceClass":
             # Need target attribute
                 for target in targets[dataset]:
                     results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target)
@@ -72,11 +72,11 @@ def parse_results_RQ1(iqr="True"):
     # Parse results of RQ1 and save as csv files.
     with open("../dump/RQ1.pickle", "rb") as p:
         results = pickle.load(p)
-    # Compare results between w/ and w/o FairBalance
+    # Compare results of FairBalance against None
     compares = copy.deepcopy(results)
     for treatment in compares:
         for dataset in compares[treatment]:
-            compares[treatment][dataset] = compare_dict(compares[treatment][dataset])
+            compares[treatment][dataset] = compare_dict(compares[treatment][dataset], baseline = "None")
     compare_df = dict2dfRQ1(compares)
     compare_df.to_csv("../results/RQ1_compare.csv", index=False)
 
@@ -90,6 +90,13 @@ def parse_results_RQ2(iqr="True"):
     # Parse results of RQ2 and save as csv files.
     with open("../dump/RQ2.pickle", "rb") as p:
         results = pickle.load(p)
+    # Compare results of other treatments against FairBalance
+    compares = copy.deepcopy(results)
+    for dataset in compares:
+        compares[dataset] = compare_dict(compares[dataset], baseline = "FairBalance")
+    compare_df = dict2dfRQ2(compares)
+    compare_df.to_csv("../results/RQ2_compare.csv", index=False)
+
     # Calculate medians and iqrs of 30 repeats
     medians = copy.deepcopy(results)
     medians = median_dict(medians, use_iqr = iqr=="True")

@@ -9,6 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import StandardScaler
 from collections import Counter
 from fairbalance import FairBalance
@@ -21,7 +22,8 @@ class Experiment:
         models = {"SVM": LinearSVC(dual=False),
                   "RF": RandomForestClassifier(n_estimators=100, criterion="entropy"),
                   "LR": LogisticRegression(),
-                  "DT": DecisionTreeClassifier(criterion="entropy")
+                  "DT": DecisionTreeClassifier(criterion="entropy"),
+                  "NB": GaussianNB()
                   }
         data_loader = {"compas": load_preproc_data_compas, "adult": load_preproc_data_adult, "german": load_preproc_data_german}
 
@@ -43,7 +45,9 @@ class Experiment:
         privileged_groups = [{self.target_attribute: 1}]
         unprivileged_groups = [{self.target_attribute: 0}]
         if self.fair_balance=="FairBalance":
-            dataset_transf_train = FairBalance(data_train)
+            dataset_transf_train = FairBalance(data_train, class_balance=False)
+        elif self.fair_balance=="FairBalanceClass":
+            dataset_transf_train = FairBalance(data_train, class_balance=True)
         elif self.fair_balance=="Reweighing":
             RW = Reweighing(unprivileged_groups=unprivileged_groups,
                             privileged_groups=privileged_groups)

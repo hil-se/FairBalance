@@ -1,0 +1,25 @@
+Dataset,Algorithm,F1,Accuracy,Sex: AOD,Sex: EOD,Sex: SPD,Race: AOD,Race: EOD,Race: SPD,Age: AOD,Age: EOD,Age: SPD
+compas,Reweighing: sex,0,3,0,0,0,-3,-3,-3,,,
+compas,Reweighing: race,0,0,-3,-3,-3,0,0,0,,,
+compas,AdversialDebiasing: sex,0,3,-3,-3,-3,-3,-3,-3,,,
+compas,AdversialDebiasing: race,0,0,-3,-3,-3,-3,-3,-3,,,
+compas,RejectOptionClassification: sex,0,0,0,0,3,-3,-3,-3,,,
+compas,RejectOptionClassification: race,0,0,-3,-3,-3,0,-3,-3,,,
+compas,FairBalance,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,,,
+compas,FairBalanceClass,3,-3,0,0,0,0,-3,-3,,,
+adult,Reweighing: sex,-3,0,0,0,3,-3,-3,-3,,,
+adult,Reweighing: race,-3,3,-3,-3,-3,0,0,0,,,
+adult,AdversialDebiasing: sex,-3,3,0,0,0,-3,-3,-3,,,
+adult,AdversialDebiasing: race,-3,3,-3,-3,-3,0,0,0,,,
+adult,RejectOptionClassification: sex,3,-3,0,0,3,-3,-3,-3,,,
+adult,RejectOptionClassification: race,3,-3,-3,-3,-3,0,-2,0,,,
+adult,FairBalance,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,,,
+adult,FairBalanceClass,3,-3,0,0,0,0,0,-3,,,
+german,Reweighing: sex,3,0,-3,-3,-3,,,,-3,-3,-3
+german,Reweighing: age,0,0,0,0,0,,,,0,0,0
+german,AdversialDebiasing: sex,3,-3,-3,-3,-3,,,,-3,-3,-3
+german,AdversialDebiasing: age,3,0,-3,-3,-3,,,,-3,-3,-3
+german,RejectOptionClassification: sex,3,-3,-3,-3,-3,,,,-3,-3,-3
+german,RejectOptionClassification: age,3,-3,-3,-3,-3,,,,-3,-3,-3
+german,FairBalance,n/a,n/a,n/a,n/a,n/a,,,,n/a,n/a,n/a
+german,FairBalanceClass,3,-3,-3,-3,-3,,,,-3,-3,-3
