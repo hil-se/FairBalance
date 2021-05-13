@@ -80,11 +80,17 @@ def parse_results_RQ1(iqr="True"):
     compare_df = dict2dfRQ1(compares)
     compare_df.to_csv("../results/RQ1_compare.csv", index=False)
 
-    # Calculate medians and iqrs of 30 repeats
+    # Calculate medians and iqrs of 50 repeats
     medians = copy.deepcopy(results)
     medians = median_dict(medians, use_iqr = iqr=="True")
     median_df = dict2dfRQ1(medians)
     median_df.to_csv("../results/RQ1_median.csv", index=False)
+
+    # Color the median csv
+    colored = color(medians, compares)
+    colored_df = dict2dfRQ1(colored)
+    colored_df.to_csv("../results/RQ1_color.csv", index=False)
+
 
 def parse_results_RQ2(iqr="True"):
     # Parse results of RQ2 and save as csv files.
@@ -97,11 +103,16 @@ def parse_results_RQ2(iqr="True"):
     compare_df = dict2dfRQ2(compares)
     compare_df.to_csv("../results/RQ2_compare.csv", index=False)
 
-    # Calculate medians and iqrs of 30 repeats
+    # Calculate medians and iqrs of 10 repeats
     medians = copy.deepcopy(results)
     medians = median_dict(medians, use_iqr = iqr=="True")
     median_df = dict2dfRQ2(medians)
     median_df.to_csv("../results/RQ2_median.csv", index=False)
+
+    # Color the median csv
+    colored = color(medians, compares)
+    colored_df = dict2dfRQ2(colored)
+    colored_df.to_csv("../results/RQ2_color.csv", index=False)
 
 
 if __name__ == "__main__":
