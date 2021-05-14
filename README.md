@@ -9,13 +9,13 @@ pip install -r requirements.txt
 ```
 cd src
 ```
-2. RQ1: Can FairBalance mitigate bias against multiple protected attributes?
+2. RQ1+2: Can FairBalance (and FairBalanceClass) mitigate bias against multiple protected attributes?
 ```
 python main.py RQ1
 ```
-3. RQ2: How does FairBalance perform comparing with the existing state-of-the-art bias mitigation algorithms?
+3. RQ3: How does FairBalance perform comparing with the existing state-of-the-art bias mitigation algorithms?
 ```
-python main.py RQ2
+python main.py RQ3
 ```
 4. Run one single experiment with specific ML algorithm (e.g. Logistic Regression), dataset (e.g. Compas), bias mitigation algorithm (e.g. FairBalance), targeted attribute (e.g. None), and number of repeats (e.g. 1): 
 ```
