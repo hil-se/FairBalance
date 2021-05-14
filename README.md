@@ -23,4 +23,4 @@ python main.py one_exp LR compas FairBalance None 1
 ```
 
 #### Acknowledgement
-This work is built on [AIF360](https://github.com/Trusted-AI/AIF360). The [aif360](https://github.com/hil-se/FairBalance/tree/main/aif360) folder is directed from the [AIF360](https://github.com/Trusted-AI/AIF360) repo. It is a great platform facilitating the creation and reproduction of AI bias mitigation algorithms.
+This work is built on [AIF360](https://github.com/Trusted-AI/AIF360). The [aif360](https://github.com/hil-se/FairBalance/tree/main/aif360) folder is directed cloned from the [AIF360](https://github.com/Trusted-AI/AIF360) repo on May 1st 2021. It is a great platform facilitating the creation and reproduction of AI bias mitigation algorithms.
