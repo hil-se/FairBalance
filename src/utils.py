@@ -143,7 +143,7 @@ def dict2dfRQ1(results):
     df = pd.DataFrame(df, columns = columns)
     return df
 
-def dict2dfRQ2(results):
+def dict2dfRQ3(results):
     # Generate a pandas dataframe based on the dictionary
     columns = ["Dataset", "Algorithm", "F1", "Accuracy", "Sex: AOD", "Sex: EOD", "Sex: SPD", "Race/Age: AOD",
                "Race/Age: EOD", "Race/Age: SPD"]

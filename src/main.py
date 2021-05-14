@@ -44,7 +44,7 @@ def RQ1():
         pickle.dump(results, p)
     parse_results_RQ1()
 
-def RQ2():
+def RQ3():
     # Compare FairBalance against other soa baseline bias mitigation algorithms.
     # Classifier is fixed to logistic regression.
     treatment = "LR"
@@ -64,9 +64,9 @@ def RQ2():
             # Print progress
             print(dataset + ", " + balance)
     # dump results
-    with open("../dump/RQ2.pickle", "wb") as p:
+    with open("../dump/RQ3.pickle", "wb") as p:
         pickle.dump(results, p)
-    parse_results_RQ2()
+    parse_results_RQ3()
 
 def parse_results_RQ1(iqr="True"):
     # Parse results of RQ1 and save as csv files.
@@ -92,27 +92,27 @@ def parse_results_RQ1(iqr="True"):
     colored_df.to_csv("../results/RQ1_color.csv", index=False)
 
 
-def parse_results_RQ2(iqr="True"):
-    # Parse results of RQ2 and save as csv files.
-    with open("../dump/RQ2.pickle", "rb") as p:
+def parse_results_RQ3(iqr="True"):
+    # Parse results of RQ3 and save as csv files.
+    with open("../dump/RQ3.pickle", "rb") as p:
         results = pickle.load(p)
     # Compare results of other treatments against FairBalance
     compares = copy.deepcopy(results)
     for dataset in compares:
         compares[dataset] = compare_dict(compares[dataset], baseline = "FairBalance")
-    compare_df = dict2dfRQ2(compares)
-    compare_df.to_csv("../results/RQ2_compare.csv", index=False)
+    compare_df = dict2dfRQ3(compares)
+    compare_df.to_csv("../results/RQ3_compare.csv", index=False)
 
     # Calculate medians and iqrs of 10 repeats
     medians = copy.deepcopy(results)
     medians = median_dict(medians, use_iqr = iqr=="True")
-    median_df = dict2dfRQ2(medians)
-    median_df.to_csv("../results/RQ2_median.csv", index=False)
+    median_df = dict2dfRQ3(medians)
+    median_df.to_csv("../results/RQ3_median.csv", index=False)
 
     # Color the median csv
     colored = color(medians, compares)
-    colored_df = dict2dfRQ2(colored)
-    colored_df.to_csv("../results/RQ2_color.csv", index=False)
+    colored_df = dict2dfRQ3(colored)
+    colored_df.to_csv("../results/RQ3_color.csv", index=False)
 
 
 if __name__ == "__main__":
