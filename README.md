@@ -17,7 +17,7 @@ python main.py RQ1
 ```
 python main.py RQ3
 ```
-4. Run one single experiment with specific ML algorithm (e.g. Logistic Regression), dataset (e.g. Compas), bias mitigation algorithm (e.g. FairBalance), target attribute (e.g. None), and number of repeats (e.g. 1): 
+4. Run one single experiment with specific ML algorithm (e.g. Logistic Regression), dataset (e.g. Compas), bias mitigation algorithm (e.g. FairBalance), target protected attribute (e.g. None), and number of repeats (e.g. 1): 
 ```
 python main.py one_exp LR compas FairBalance None 1
 ```
