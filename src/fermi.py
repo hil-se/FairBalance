@@ -69,6 +69,15 @@ class FERMI:
 
             self.theta -= self.step_size * (g1 + self.lam * regularizer_grad)
 
+    def predict_proba(self, X):
+        logits = np.dot(X, self.theta)
+        probs = self.sigmoid(logits)
+        return probs
+
+    def predict(self, X):
+        probs = self.predict_proba(X)
+        preds = [1 if p>=0.5 else 0 for p in probs]
+        return preds
 
 
 
