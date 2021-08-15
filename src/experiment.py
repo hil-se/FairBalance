@@ -14,6 +14,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import StandardScaler
 from collections import Counter
 from fairbalance import FairBalance
+from fermi import FERMI
 from aif360.algorithms.inprocessing.adversarial_debiasing import AdversarialDebiasing
 import tensorflow.compat.v1 as tf
 tf.disable_eager_execution()
@@ -76,13 +77,13 @@ class Experiment:
             groups = {}
             count = 0
             for i in range(len(y_train)):
-                group = tuple(X_train.protected_attributes[i])
+                group = tuple(dataset_transf_train.protected_attributes[i])
                 if group not in groups:
                     groups[group] = count
                     count += 1
                 S.append(groups[group])
             S = numpy.array(S)
-
+            self.model = FERMI()
             self.model.fit(X_train, y_train, S, sample_weight=dataset_transf_train.instance_weights)
 
             X_test = scale_orig.transform(data_test.features)

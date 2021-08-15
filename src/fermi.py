@@ -15,11 +15,10 @@ class FERMI:
     def sigmoid(self, x):  # P(Y = 1 | X, \theta) Input: X\theta
         return 1.0 / (1.0 + np.exp(-x))
 
-    def fit(self, X, y, S, sample_weight=None):
+    def fit(self, X, y, S, sample_weight=[]):
         n, d = X.shape
         self.theta = np.zeros((d, 1))
-        Y_ = np.array(y).reshape((len(y), 1))
-        if sample_weight == None:
+        if len(sample_weight) == 0:
             sample_weight = np.array([1]*len(y))
 
         # Computing the gradient of regularizer
@@ -29,7 +28,7 @@ class FERMI:
             probs = self.sigmoid(logits)
             grad_probs = self.grad_sigmoid(logits)
 
-            g1 = np.dot(X.T, (probs - Y_))
+            g1 = np.dot(X.T, (probs.flatten() - y) * sample_weight).reshape(d,1)
 
             P_Y1 = sum(probs*sample_weight) / sum(sample_weight)
             P_Y0 = 1 - P_Y1
@@ -40,13 +39,13 @@ class FERMI:
             grad_Y0 = - grad_Y1
 
             regularizer_grad = np.zeros(self.theta.shape)
-
-            for j in range(np.unique(S)):
+            for j in np.unique(S):
                 indicator_function = (S == j) * 1
-                indicator_function *= sample_weight
-                number_of_s = sum(indicator_function)[0]
+
+                indicator_function = indicator_function * sample_weight
+                number_of_s = sum(indicator_function)
                 P_S = number_of_s / sum(sample_weight)
-                P_Y1S = np.dot(indicator_function.T, probs)[0][0] / number_of_s
+                P_Y1S = np.dot(indicator_function.T, probs)[0] / number_of_s
                 P_Y0S = 1 - P_Y1S
 
                 q_1j = P_Y1S * np.sqrt(P_S) / np.sqrt(P_Y1)
@@ -54,9 +53,9 @@ class FERMI:
 
                 # Computing the gradient with respect to self.theta
 
-                conditional_grad_probs = np.multiply(indicator_function, grad_probs)
+                conditional_grad_probs = np.multiply(indicator_function, grad_probs.flatten())
 
-                D = np.diag(conditional_grad_probs.flatten())
+                D = np.diag(conditional_grad_probs)
                 grad_Y1S = np.dot(D, X).sum(axis=0).reshape(d, 1)
                 grad_Y1S /= number_of_s
                 grad_Y0S = - grad_Y1S
@@ -65,8 +64,7 @@ class FERMI:
                 grad_q1j = np.sqrt(P_S) / P_Y1 * (np.sqrt(P_Y1) * grad_Y1S - P_Y1S / (2 * np.sqrt(P_Y1)) * grad_Y1)
                 grad_q0j = np.sqrt(P_S) / P_Y0 * (np.sqrt(P_Y0) * grad_Y0S - P_Y0S / (2 * np.sqrt(P_Y0)) * grad_Y0)
 
-                regularizer_grad += 2 * q_1j * grad_q1j + 2 * q_0j * grad_q0j
-
+                regularizer_grad += (2 * np.dot(q_1j, grad_q1j.T) + 2 * np.dot(q_0j, grad_q0j.T)).reshape(d, 1)
             self.theta -= self.step_size * (g1 + self.lam * regularizer_grad)
 
     def predict_proba(self, X):
