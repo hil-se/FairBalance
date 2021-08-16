@@ -4,10 +4,11 @@ import numpy as np
 # Reproduced with code at: https://github.com/optimization-for-data-driven-science/FERMI
 
 class FERMI:
-    def __init__(self, lam = 300000, num_iterations = 5000, step_size = 0.0001):
+    def __init__(self, lam = 30000, num_iterations = 500, step_size = 0.0001, stopping = 0.001):
         self.lam = lam
         self.num_iterations = num_iterations
         self.step_size = step_size
+        self.stopping = stopping
 
     def grad_sigmoid(self, x):
         return np.exp(-x) / ((1.0 + np.exp(-x)) * (1.0 + np.exp(-x)))
@@ -28,17 +29,17 @@ class FERMI:
             probs = self.sigmoid(logits)
             grad_probs = self.grad_sigmoid(logits)
 
-            g1 = np.dot(X.T, (probs.flatten() - y) * sample_weight).reshape(d,1)
+            g1 = np.dot(X.T, ((probs.flatten() - y) * sample_weight).reshape(n,1))
 
-            P_Y1 = sum(probs*sample_weight) / sum(sample_weight)
+            P_Y1 = sum(np.dot(probs.T, sample_weight)) / sum(sample_weight)
             P_Y0 = 1 - P_Y1
 
-            D = np.diag(grad_probs.flatten() * sample_weight)
-            grad_Y1 = np.dot(D, X).sum(axis=0).reshape(d, 1)
+            grad_Y1 = np.dot(grad_probs.flatten() * sample_weight, X).reshape(d, 1)
             grad_Y1 /= sum(sample_weight)
             grad_Y0 = - grad_Y1
 
             regularizer_grad = np.zeros(self.theta.shape)
+
             for j in np.unique(S):
                 indicator_function = (S == j) * 1
 
@@ -55,8 +56,8 @@ class FERMI:
 
                 conditional_grad_probs = np.multiply(indicator_function, grad_probs.flatten())
 
-                D = np.diag(conditional_grad_probs)
-                grad_Y1S = np.dot(D, X).sum(axis=0).reshape(d, 1)
+
+                grad_Y1S = np.dot(conditional_grad_probs.flatten(), X).reshape(d, 1)
                 grad_Y1S /= number_of_s
                 grad_Y0S = - grad_Y1S
 
@@ -64,8 +65,12 @@ class FERMI:
                 grad_q1j = np.sqrt(P_S) / P_Y1 * (np.sqrt(P_Y1) * grad_Y1S - P_Y1S / (2 * np.sqrt(P_Y1)) * grad_Y1)
                 grad_q0j = np.sqrt(P_S) / P_Y0 * (np.sqrt(P_Y0) * grad_Y0S - P_Y0S / (2 * np.sqrt(P_Y0)) * grad_Y0)
 
-                regularizer_grad += (2 * np.dot(q_1j, grad_q1j.T) + 2 * np.dot(q_0j, grad_q0j.T)).reshape(d, 1)
-            self.theta -= self.step_size * (g1 + self.lam * regularizer_grad)
+                regularizer_grad += 2 * q_1j * grad_q1j + 2 * q_0j * grad_q0j
+            total_grad = g1 + self.lam * regularizer_grad
+            self.theta -= self.step_size * total_grad
+            if np.linalg.norm(total_grad, 2) < self.stopping:
+                break
+
 
     def predict_proba(self, X):
         logits = np.dot(X, self.theta)

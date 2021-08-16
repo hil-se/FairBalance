@@ -12,8 +12,8 @@ def one_exp(treatment, data, fair_balance, target="", repeats=10):
     # Conduct one experiment:
     #     treatment in {"SVM", "RF", "LR", "DT"}
     #     data in {"compas", "adult", "german"}
-    #     fair_balance in {"None", "FairBalance", "Reweighing", "AdversialDebiasing", "RejectOptionClassification"}
-    #     target = target protected attribute, not used if fair_balance == "FairBlance" or "None"
+    #     fair_balance in {"None", "FairBalance", "Reweighing", "AdversialDebiasing", "FERMI", "RejectOptionClassification"}
+    #     target = target protected attribute, not used if fair_balance == "FairBalance", "FairBalanceClass" or "None"
     #     repeats = number of times repeating the experiments
 
     exp = Experiment(treatment, data=data, fair_balance=fair_balance, target_attribute=target)
@@ -23,6 +23,9 @@ def one_exp(treatment, data, fair_balance, target="", repeats=10):
         if result:
             results = merge_dict(results, result)
     print(results)
+    medians = copy.deepcopy(results)
+    medians = median_dict(medians, use_iqr=True)
+    print(medians)
     return results
 
 def RQ1():
@@ -49,13 +52,13 @@ def RQ3():
     # Classifier is fixed to logistic regression.
     treatment = "LR"
     datasets = ["compas", "adult", "german"]
-    balances = ["Reweighing", "AdversialDebiasing", "RejectOptionClassification", "FairBalance", "FairBalanceClass"]
+    balances = ["Reweighing", "AdversialDebiasing", "FERMI", "RejectOptionClassification", "FairBalance", "FairBalanceClass", "FairBalance+FERMI", "FairBalanceClass+FERMI"]
     targets = {"compas": ["sex", "race"], "adult": ["sex", "race"], "german": ["sex", "age"]}
     results = {}
     for dataset in datasets:
         results[dataset] = {}
         for balance in balances:
-            if balance!="FairBalance" and balance!="FairBalanceClass":
+            if "FairBalance" not in balance and balance!="FERMI":
             # Need target attribute
                 for target in targets[dataset]:
                     results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target)

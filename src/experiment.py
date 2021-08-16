@@ -46,9 +46,9 @@ class Experiment:
 
         privileged_groups = [{self.target_attribute: 1}]
         unprivileged_groups = [{self.target_attribute: 0}]
-        if self.fair_balance=="FairBalance":
+        if self.fair_balance=="FairBalance" or self.fair_balance=="FairBalance+FERMI":
             dataset_transf_train = FairBalance(data_train, class_balance=False)
-        elif self.fair_balance=="FairBalanceClass":
+        elif self.fair_balance=="FairBalanceClass" or self.fair_balance=="FairBalanceClass+FERMI":
             dataset_transf_train = FairBalance(data_train, class_balance=True)
         elif self.fair_balance=="Reweighing":
             RW = Reweighing(unprivileged_groups=unprivileged_groups,
@@ -69,7 +69,7 @@ class Experiment:
             self.model.fit(dataset_transf_train)
             preds = self.model.predict(data_test).labels.ravel()
             sess.close()
-        elif self.fair_balance=="FERMI":
+        elif self.fair_balance=="FERMI" or self.fair_balance=="FairBalance+FERMI" or self.fair_balance=="FairBalanceClass+FERMI":
             scale_orig = StandardScaler()
             X_train = scale_orig.fit_transform(dataset_transf_train.features)
             y_train = dataset_transf_train.labels.ravel()
