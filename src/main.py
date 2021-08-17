@@ -52,13 +52,13 @@ def RQ3():
     # Classifier is fixed to logistic regression.
     treatment = "LR"
     datasets = ["compas", "adult", "german"]
-    balances = ["Reweighing", "AdversialDebiasing", "FERMI", "RejectOptionClassification", "FairBalance", "FairBalanceClass", "FairBalance+FERMI", "FairBalanceClass+FERMI"]
+    balances = ["Reweighing", "AdversialDebiasing", "RejectOptionClassification", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass"]
     targets = {"compas": ["sex", "race"], "adult": ["sex", "race"], "german": ["sex", "age"]}
     results = {}
     for dataset in datasets:
         results[dataset] = {}
         for balance in balances:
-            if "FairBalance" not in balance and balance!="FERMI":
+            if "FairBalance" not in balance and "FERMI" not in balance:
             # Need target attribute
                 for target in targets[dataset]:
                     results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target)

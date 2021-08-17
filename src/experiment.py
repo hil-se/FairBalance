@@ -1,5 +1,6 @@
 
 import numpy
+import time
 import sys
 sys.path.append("../")
 
@@ -23,7 +24,7 @@ class Experiment:
     def __init__(self, model, data="german", fair_balance = "none", target_attribute=""):
         models = {"SVM": LinearSVC(dual=False),
                   "RF": RandomForestClassifier(n_estimators=100, criterion="entropy"),
-                  "LR": LogisticRegression(),
+                  "LR": LogisticRegression(max_iter = 5000, tol = 0.000001),
                   "DT": DecisionTreeClassifier(criterion="entropy"),
                   "NB": GaussianNB()
                   }
@@ -42,13 +43,14 @@ class Experiment:
 
 
     def run(self):
+        start_time = time.time()
         data_train, data_test = self.data.split([0.7], shuffle=True)
 
         privileged_groups = [{self.target_attribute: 1}]
         unprivileged_groups = [{self.target_attribute: 0}]
-        if self.fair_balance=="FairBalance" or self.fair_balance=="FairBalance+FERMI":
+        if self.fair_balance=="FairBalance":
             dataset_transf_train = FairBalance(data_train, class_balance=False)
-        elif self.fair_balance=="FairBalanceClass" or self.fair_balance=="FairBalanceClass+FERMI":
+        elif self.fair_balance=="FairBalanceClass":
             dataset_transf_train = FairBalance(data_train, class_balance=True)
         elif self.fair_balance=="Reweighing":
             RW = Reweighing(unprivileged_groups=unprivileged_groups,
@@ -69,7 +71,7 @@ class Experiment:
             self.model.fit(dataset_transf_train)
             preds = self.model.predict(data_test).labels.ravel()
             sess.close()
-        elif self.fair_balance=="FERMI" or self.fair_balance=="FairBalance+FERMI" or self.fair_balance=="FairBalanceClass+FERMI":
+        elif "FERMI" in self.fair_balance:
             scale_orig = StandardScaler()
             X_train = scale_orig.fit_transform(dataset_transf_train.features)
             y_train = dataset_transf_train.labels.ravel()
@@ -83,7 +85,8 @@ class Experiment:
                     count += 1
                 S.append(groups[group])
             S = numpy.array(S)
-            self.model = FERMI()
+            lam = 30000 if self.fair_balance == "FERMI30K" else 10000
+            self.model = FERMI(lam = lam)
             self.model.fit(X_train, y_train, S, sample_weight=dataset_transf_train.instance_weights)
 
             X_test = scale_orig.transform(data_test.features)
@@ -121,7 +124,9 @@ class Experiment:
 
 
         y_test = data_test.labels.ravel()
+        runtime = time.time() - start_time
         result = self.evaluate(numpy.array(preds), y_test, data_test)
+        result["runtime"] = runtime
         return result
 
     def evaluate(self, preds, truth, X_test):

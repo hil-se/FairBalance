@@ -44,8 +44,12 @@ class FERMI:
                 indicator_function = (S == j) * 1
 
                 indicator_function = indicator_function * sample_weight
+                total = sum(sample_weight)
+                # total = n
+
                 number_of_s = sum(indicator_function)
-                P_S = number_of_s / sum(sample_weight)
+                P_S = number_of_s / total
+
                 P_Y1S = np.dot(indicator_function.T, probs)[0] / number_of_s
                 P_Y0S = 1 - P_Y1S
 
@@ -66,6 +70,7 @@ class FERMI:
                 grad_q0j = np.sqrt(P_S) / P_Y0 * (np.sqrt(P_Y0) * grad_Y0S - P_Y0S / (2 * np.sqrt(P_Y0)) * grad_Y0)
 
                 regularizer_grad += 2 * q_1j * grad_q1j + 2 * q_0j * grad_q0j
+
             total_grad = g1 + self.lam * regularizer_grad
             self.theta -= self.step_size * total_grad
             if np.linalg.norm(total_grad, 2) < self.stopping:

@@ -145,7 +145,7 @@ def dict2dfRQ1(results):
 
 def dict2dfRQ3(results):
     # Generate a pandas dataframe based on the dictionary
-    columns = ["Dataset", "Algorithm", "F1", "Accuracy", "Sex: AOD", "Sex: EOD", "Sex: SPD", "Race/Age: AOD",
+    columns = ["Dataset", "Algorithm", "F1", "Accuracy", "Runtime", "Sex: AOD", "Sex: EOD", "Sex: SPD", "Race/Age: AOD",
                "Race/Age: EOD", "Race/Age: SPD"]
     df = {key: [] for key in columns}
     for dataset in results:
@@ -156,6 +156,7 @@ def dict2dfRQ3(results):
             df["Algorithm"].append(treatment)
             df["F1"].append(x["f1"])
             df["Accuracy"].append(x["acc"])
+            df["Runtime"].append(x["runtime"])
             df["Sex: AOD"].append(x["sex"]["aod"])
             df["Sex: EOD"].append(x["sex"]["eod"])
             df["Sex: SPD"].append(x["sex"]["spd"])
