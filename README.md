@@ -1,4 +1,4 @@
-### FairBalance: Mitigating Machine Learning Bias Against Multiple Protected Attributes With Data Balancing.
+### FairBalance: Mitigating Machine Learning Bias Against Multiple Sensitive Attributes With Data Balancing.
 
 #### Usage
 0. Install dependencies:
@@ -9,7 +9,7 @@ pip install -r requirements.txt
 ```
 cd src
 ```
-2. RQ1+2: Can FairBalance (and FairBalanceClass) mitigate bias against multiple protected attributes?
+2. RQ1+2: Can FairBalance (and FairBalanceClass) mitigate bias against multiple Sensitive attributes?
 ```
 python main.py RQ1
 ```
@@ -17,7 +17,7 @@ python main.py RQ1
 ```
 python main.py RQ3
 ```
-4. Run one single experiment with specific ML algorithm (e.g. Logistic Regression), dataset (e.g. Compas), bias mitigation algorithm (e.g. FairBalance), target protected attribute (e.g. None), and number of repeats (e.g. 1): 
+4. Run one single experiment with specific ML algorithm (e.g. Logistic Regression), dataset (e.g. Compas), bias mitigation algorithm (e.g. FairBalance), target Sensitive attribute (e.g. None), and number of repeats (e.g. 1): 
 ```
 python main.py one_exp LR compas FairBalance None 1
 ```
