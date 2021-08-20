@@ -52,9 +52,10 @@ def RQ3():
     # Classifier is fixed to logistic regression.
     treatment = "LR"
     datasets = ["compas", "adult", "german"]
-    balances = ["Reweighing", "AdversialDebiasing", "RejectOptionClassification", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass"]
+    balances = ["Reweighing", "AdversialDebiasing", "RejectOptionClassification", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass", "Fair-SMOTE"]
     targets = {"compas": ["sex", "race"], "adult": ["sex", "race"], "german": ["sex", "age"]}
     results = {}
+
     for dataset in datasets:
         results[dataset] = {}
         for balance in balances:

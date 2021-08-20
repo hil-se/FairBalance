@@ -18,6 +18,8 @@ from fairbalance import FairBalance
 from fermi import FERMI
 from aif360.algorithms.inprocessing.adversarial_debiasing import AdversarialDebiasing
 import tensorflow.compat.v1 as tf
+from fairSMOTE.fairsmote import Fairsmote
+
 tf.disable_eager_execution()
 
 class Experiment:
@@ -39,6 +41,7 @@ class Experiment:
         self.data = data_loader[data]()
         self.X = self.data.features
         self.y = self.data.labels.ravel()
+        self.dataset_name = data
 
 
 
@@ -59,6 +62,17 @@ class Experiment:
             dataset_transf_train = RW.transform(data_train)
         else:
             dataset_transf_train = data_train
+
+
+        if self.fair_balance=="Fair-SMOTE":
+            fs = Fairsmote(df = data_train, protected_attribute = self.target_attribute, df_name = self.dataset_name)
+            dataset_transf_train = fs.run_fairsmote()
+            scale_orig = StandardScaler()
+            X_train = scale_orig.fit_transform(dataset_transf_train.features)
+            y_train = dataset_transf_train.labels.ravel()
+            self.model.fit(X_train,y_train)
+            X_test = scale_orig.transform(data_test.features)
+            preds = self.model.predict(X_test)
 
         if self.fair_balance=="AdversialDebiasing":
             tf.reset_default_graph()
