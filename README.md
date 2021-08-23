@@ -1,4 +1,4 @@
-### FairBalance: Mitigating Machine Learning Bias Against Multiple Sensitive Attributes With Data Balancing.
+### FairBalance: Improving Machine Learning Fairness on MultipleSensitive Attributes With Data Balancing.
 
 #### Usage
 0. Install dependencies:
