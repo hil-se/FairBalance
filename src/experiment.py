@@ -26,7 +26,7 @@ class Experiment:
     def __init__(self, model, data="german", fair_balance = "none", target_attribute=""):
         models = {"SVM": LinearSVC(dual=False),
                   "RF": RandomForestClassifier(n_estimators=100, criterion="entropy"),
-                  "LR": LogisticRegression(max_iter = 5000, tol = 0.000001),
+                  "LR": LogisticRegression(max_iter = 100, tol = 0.000001),
                   "DT": DecisionTreeClassifier(criterion="entropy"),
                   "NB": GaussianNB()
                   }
@@ -60,19 +60,12 @@ class Experiment:
                             privileged_groups=privileged_groups)
             RW.fit(data_train)
             dataset_transf_train = RW.transform(data_train)
+        elif self.fair_balance=="Fair-SMOTE":
+            fs = Fairsmote(df = data_train, protected_attribute = self.target_attribute, df_name = self.dataset_name)
+            dataset_transf_train = fs.run_fairsmote()
         else:
             dataset_transf_train = data_train
 
-
-        if self.fair_balance=="Fair-SMOTE":
-            fs = Fairsmote(df = data_train, protected_attribute = self.target_attribute, df_name = self.dataset_name)
-            dataset_transf_train = fs.run_fairsmote()
-            scale_orig = StandardScaler()
-            X_train = scale_orig.fit_transform(dataset_transf_train.features)
-            y_train = dataset_transf_train.labels.ravel()
-            self.model.fit(X_train,y_train)
-            X_test = scale_orig.transform(data_test.features)
-            preds = self.model.predict(X_test)
 
         if self.fair_balance=="AdversialDebiasing":
             tf.reset_default_graph()
