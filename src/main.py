@@ -8,7 +8,7 @@ from utils import *
 from experiment import Experiment
 
 
-def one_exp(treatment, data, fair_balance, target="", repeats=10):
+def one_exp(treatment, data, fair_balance, target="", repeats=50):
     # Conduct one experiment:
     #     treatment in {"SVM", "RF", "LR", "DT"}
     #     data in {"compas", "adult", "german"}
@@ -62,7 +62,10 @@ def RQ3():
             if "FairBalance" not in balance and "FERMI" not in balance:
             # Need target attribute
                 for target in targets[dataset]:
-                    results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target)
+                    if balance == "RejectOptionClassification":
+                        results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target, repeats=10)
+                    else:
+                        results[dataset][balance + ": " + target] = one_exp(treatment, dataset, balance, target=target)
             else:
                 results[dataset][balance] = one_exp(treatment, dataset, balance)
             # Print progress
