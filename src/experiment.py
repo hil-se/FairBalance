@@ -100,6 +100,7 @@ class Experiment:
             preds = self.model.predict(X_test)
         else:
             scale_orig = StandardScaler()
+
             X_train = scale_orig.fit_transform(dataset_transf_train.features)
             y_train = dataset_transf_train.labels.ravel()
 
