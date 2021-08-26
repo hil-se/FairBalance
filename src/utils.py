@@ -31,6 +31,8 @@ def is_larger(x, y):
         # 3: larger with large effect size
 
     # Mann Whitney U test
+    if np.array_equal(x, y):
+        return 0
     U, pvalue = mannwhitneyu(x, y, alternative="greater")
     if pvalue>0.05:
         # If x is not greater than y in 95% confidence
@@ -48,8 +50,62 @@ def is_larger(x, y):
         else:
             return 3
 
+def rank(samples, lower_better=True, thres = 2):
+    # Rank samples based on is_larger function, thres can be {1, 2, 3}
+    medians = [np.abs(np.median(sample)) for sample in samples]
+    order = np.argsort(medians)
+    order = order if lower_better else order[::-1]
+    baseline = samples[order[0]]
+    rank = 0
+    ranks = [0]
+    for i in order[1:]:
+        if lower_better:
+            better = is_larger(np.abs(samples[i]), np.abs(baseline))
+        else:
+            better = is_larger(np.abs(baseline), np.abs(samples[i]))
+        if better >= thres:
+            rank += 1
+            baseline = samples[i]
+        ranks.append(rank)
+    ordered_rank = ranks[:]
+    for i, o in enumerate(order):
+        ordered_rank[o] = ranks[i]
+    return ordered_rank
+
+
+
+
+def rank_dict(results):
+    # Rank each treatment based on statistical significance for each metric.
+
+    treatments = list(results.keys())
+    if len(treatments)==0:
+        return results
+    keys = list(results[treatments[0]].keys())
+
+    for key in keys:
+        lower_better = key == "runtime" or key == "fpr" or type(results[treatments[0]][key]) == dict
+        if type(results[treatments[0]][key]) == dict:
+            for key2 in results[treatments[0]][key]:
+                to_compare = []
+                for treatment in treatments:
+                    to_compare.append(results[treatment][key][key2])
+                ranks = rank(to_compare, lower_better)
+                for i, treatment in enumerate(treatments):
+                    results[treatment][key][key2] = ranks[i]
+        else:
+            to_compare = []
+            for treatment in treatments:
+                to_compare.append(results[treatment][key])
+            ranks = rank(to_compare, lower_better)
+            for i, treatment in enumerate(treatments):
+                results[treatment][key] = ranks[i]
+    return results
+
+
+
 def compare_dict(results, baseline="None"):
-    # Check if results of non-baseline treatments are significantly better than the baseline
+    # Check if results of non-baseline treatments are significantly better than the baseline.
 
     y = results[baseline]
     for treatment in results:
@@ -58,7 +114,7 @@ def compare_dict(results, baseline="None"):
         x = results[treatment]
         for key in x:
             if type(x[key]) == dict:
-                # Bias Metrics: lower the better
+                # Bias Metrics: lower abs the better
                 for key2 in x[key]:
                     xx = x[key][key2]
                     yy = y[key][key2]
@@ -67,13 +123,16 @@ def compare_dict(results, baseline="None"):
                         better = -is_larger(np.abs(xx), np.abs(yy))
                     x[key][key2] = better
             else:
-                # General Metrics: higher the better
+                # General Metrics: higher the better except for runtime and fpr
                 xx = x[key]
                 yy = y[key]
                 better = is_larger(xx, yy)
                 if better == 0:
                     better = -is_larger(yy, xx)
-                x[key] = better
+                if key == "runtime" or key == "fpr":
+                    x[key] = -better
+                else:
+                    x[key] = better
     for key in y:
         if type(y[key]) == dict:
             for key2 in y[key]:
@@ -185,4 +244,12 @@ def color(median, compare):
             median[key] = color(median[key], compare[key])
         else:
             median[key] = mapping[compare[key]]+median[key]
+    return median
+
+def combine(median, compare):
+    for key in median:
+        if type(median[key]) == dict:
+            median[key] = combine(median[key], compare[key])
+        else:
+            median[key] = "R"+str(compare[key])+": "+median[key]
     return median

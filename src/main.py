@@ -106,7 +106,7 @@ def parse_results_RQ3(iqr="True"):
     # Compare results of other treatments against FairBalance
     compares = copy.deepcopy(results)
     for dataset in compares:
-        compares[dataset] = compare_dict(compares[dataset], baseline = "FairBalance")
+        compares[dataset] = rank_dict(compares[dataset])
     compare_df = dict2dfRQ3(compares)
     compare_df.to_csv("../results/RQ3_compare.csv", index=False)
 
@@ -116,10 +116,10 @@ def parse_results_RQ3(iqr="True"):
     median_df = dict2dfRQ3(medians)
     median_df.to_csv("../results/RQ3_median.csv", index=False)
 
-    # Color the median csv
-    colored = color(medians, compares)
-    colored_df = dict2dfRQ3(colored)
-    colored_df.to_csv("../results/RQ3_color.csv", index=False)
+    # Combine the median csv
+    combined = combine(medians, compares)
+    combined_df = dict2dfRQ3(combined)
+    combined_df.to_csv("../results/RQ3_combine.csv", index=False)
 
 
 if __name__ == "__main__":
