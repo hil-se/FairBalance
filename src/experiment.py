@@ -1,4 +1,3 @@
-
 import numpy
 import time
 import sys
@@ -19,6 +18,8 @@ from fermi import FERMI
 from aif360.algorithms.inprocessing.adversarial_debiasing import AdversarialDebiasing
 import tensorflow.compat.v1 as tf
 from fairSMOTE.fairsmote import Fairsmote
+from fairSMOTE.fairsmoteMultiple import FairsmoteMultiple
+
 
 tf.disable_eager_execution()
 
@@ -63,6 +64,11 @@ class Experiment:
         elif self.fair_balance=="Fair-SMOTE":
             fs = Fairsmote(df = data_train, protected_attribute = self.target_attribute, df_name = self.dataset_name)
             dataset_transf_train = fs.run_fairsmote()
+
+        elif self.fair_balance=="Fair-SMOTE-Multiple":  
+            fs = FairsmoteMultiple(df = data_train, df_name = self.dataset_name)    
+            dataset_transf_train = fs.run_fairsmote_multiple()
+            
         else:
             dataset_transf_train = data_train
 
@@ -187,5 +193,3 @@ class Experiment:
             result[key]["aod"] = 0.5*(fpr0-fpr1+tpr0-tpr1)
             result[key]["spd"] = pr0 - pr1
         return result
-
-
