@@ -27,7 +27,7 @@ class Experiment:
     def __init__(self, model, data="german", fair_balance = "none", target_attribute=""):
         models = {"SVM": LinearSVC(dual=False),
                   "RF": RandomForestClassifier(n_estimators=100, criterion="entropy"),
-                  "LR": LogisticRegression(max_iter = 10000, tol = 0.000001),
+                  "LR": LogisticRegression(),
                   "DT": DecisionTreeClassifier(criterion="entropy"),
                   "NB": GaussianNB()
                   }

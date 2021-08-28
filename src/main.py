@@ -59,7 +59,7 @@ def RQ3():
     for dataset in datasets:
         results[dataset] = {}
         for balance in balances:
-            if "FairBalance" not in balance and "FERMI" not in balance:
+            if "FairBalance" not in balance and "FERMI" not in balance and balance!="Fair-SMOTE-Multiple":
             # Need target attribute
                 for target in targets[dataset]:
                     if balance == "RejectOptionClassification":

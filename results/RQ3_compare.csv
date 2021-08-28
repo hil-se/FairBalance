@@ -1,37 +1,40 @@
 Dataset,Algorithm,F1,Accuracy,Runtime,Sex: AOD,Sex: EOD,Sex: SPD,Race/Age: AOD,Race/Age: EOD,Race/Age: SPD
-compas,Reweighing: sex,2,0,0,0,0,1,4,3,4
-compas,Reweighing: race,1,1,1,2,2,4,0,0,1
-compas,Fair-SMOTE: sex,1,1,6,0,0,0,3,2,3
-compas,Fair-SMOTE: race,0,1,5,2,2,5,1,0,0
-compas,AdversialDebiasing: sex,1,0,7,3,3,6,5,4,5
-compas,AdversialDebiasing: race,1,1,7,1,1,3,2,1,2
-compas,RejectOptionClassification: sex,2,2,8,0,0,0,5,4,5
-compas,RejectOptionClassification: race,0,1,9,1,1,4,1,0,0
-compas,FERMI30K,0,2,3,0,0,1,1,0,0
-compas,FERMI10K,0,2,4,0,0,2,1,0,0
-compas,FairBalance,2,1,2,0,0,2,1,0,1
-compas,FairBalanceClass,0,2,2,0,0,1,2,1,2
-adult,Reweighing: sex,7,2,0,0,0,1,5,5,4
-adult,Reweighing: race,8,0,0,3,5,5,1,0,1
-adult,Fair-SMOTE: sex,3,7,6,0,1,4,6,5,7
-adult,Fair-SMOTE: race,0,4,8,4,4,7,1,0,3
-adult,AdversialDebiasing: sex,7,1,5,1,2,3,4,4,4
-adult,AdversialDebiasing: race,8,0,5,3,5,5,1,1,0
-adult,RejectOptionClassification: sex,4,6,7,1,2,0,5,3,6
-adult,RejectOptionClassification: race,1,5,8,5,4,8,2,1,0
-adult,FERMI30K,5,8,4,1,1,0,3,2,0
-adult,FERMI10K,2,7,3,2,3,6,3,1,5
-adult,FairBalance,6,2,2,0,0,2,0,1,0
-adult,FairBalanceClass,3,3,1,0,0,2,1,0,2
-german,Reweighing: sex,2,0,0,2,2,2,3,4,5
-german,Reweighing: age,3,0,0,2,2,2,1,1,1
-german,Fair-SMOTE: sex,0,1,3,2,2,2,3,2,4
-german,Fair-SMOTE: age,0,1,4,2,2,2,2,2,3
-german,AdversialDebiasing: sex,1,1,5,2,2,2,3,4,4
-german,AdversialDebiasing: age,1,1,5,2,2,2,4,5,5
-german,RejectOptionClassification: sex,0,1,6,2,2,2,3,3,4
-german,RejectOptionClassification: age,0,1,6,2,2,2,2,2,2
-german,FERMI30K,4,0,2,0,0,0,0,0,0
-german,FERMI10K,4,0,2,0,0,0,0,0,0
-german,FairBalance,3,0,1,1,1,1,1,1,1
-german,FairBalanceClass,0,1,1,2,2,2,2,2,3
+compas,Reweighing: sex,1,0,0,1,1,1,3,2,2
+compas,Reweighing: race,1,0,0,3,3,4,0,0,0
+compas,Fair-SMOTE: sex,1,0,3,0,0,0,2,1,1
+compas,Fair-SMOTE: race,0,0,2,3,2,4,1,0,0
+compas,Fair-SMOTE-Multiple,0,0,6,0,0,1,0,0,0
+compas,AdversialDebiasing: sex,1,0,5,4,4,5,3,2,2
+compas,AdversialDebiasing: race,1,0,4,2,2,3,1,1,1
+compas,RejectOptionClassification: sex,0,0,7,0,0,0,4,3,3
+compas,RejectOptionClassification: race,0,0,7,3,3,4,0,0,0
+compas,FERMI30K,0,0,2,0,0,1,1,0,0
+compas,FERMI10K,0,0,2,1,1,2,1,0,0
+compas,FairBalance,1,0,1,1,1,2,0,0,0
+compas,FairBalanceClass,0,0,1,0,0,1,1,1,1
+adult,Reweighing: sex,6,1,1,0,0,1,3,5,4
+adult,Reweighing: race,7,0,1,5,6,6,0,0,1
+adult,Fair-SMOTE: sex,3,5,5,1,0,4,5,5,7
+adult,Fair-SMOTE: race,0,3,6,6,5,8,0,0,3
+adult,Fair-SMOTE-Multiple,2,4,9,3,3,5,2,3,4
+adult,AdversialDebiasing: sex,6,1,4,2,2,3,3,5,4
+adult,AdversialDebiasing: race,7,0,4,5,6,6,0,0,0
+adult,RejectOptionClassification: sex,4,5,8,2,1,0,4,4,6
+adult,RejectOptionClassification: race,1,4,7,7,5,9,0,1,0
+adult,FERMI30K,5,6,3,2,0,0,1,2,0
+adult,FERMI10K,2,5,2,4,4,7,1,1,5
+adult,FairBalance,6,1,1,1,1,1,0,0,0
+adult,FairBalanceClass,3,2,0,0,0,2,0,0,2
+german,Reweighing: sex,3,1,1,2,2,2,4,3,3
+german,Reweighing: age,4,0,0,2,3,2,1,2,1
+german,Fair-SMOTE: sex,0,2,5,3,3,2,4,3,4
+german,Fair-SMOTE: age,0,2,6,2,2,2,3,2,3
+german,Fair-SMOTE-Multiple,0,2,8,2,2,3,2,2,2
+german,AdversialDebiasing: sex,2,1,7,4,4,4,4,4,4
+german,AdversialDebiasing: age,2,4,7,3,3,3,5,5,5
+german,RejectOptionClassification: sex,0,3,9,2,2,2,4,2,4
+german,RejectOptionClassification: age,1,4,9,3,2,3,2,2,2
+german,FERMI30K,5,0,4,0,0,0,0,0,0
+german,FERMI10K,5,0,4,0,0,0,0,0,0
+german,FairBalance,4,1,2,1,1,1,1,1,1
+german,FairBalanceClass,0,2,3,2,2,2,3,2,3
