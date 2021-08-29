@@ -4,6 +4,7 @@ from scipy.spatial import distance as dist
 from scipy.spatial import distance
 from sklearn.neighbors import NearestNeighbors as NN
 from aif360.datasets import StandardDataset
+from sklearn.linear_model import LogisticRegression
 
 import pandas as pd
 import random,time,csv
@@ -73,6 +74,8 @@ class Fairsmote:
                 df = df.append(df_zero_one)
                 self.df = df
 
+                self.df = self.situation_testing(self.df,"Income Binary","sex")
+
                 self.df = StandardDataset( df=df, label_name='Income Binary', protected_attribute_names=['sex'], favorable_classes=[1],
                     privileged_classes=[[1]])
 
@@ -123,6 +126,8 @@ class Fairsmote:
                 df_zero_one = dataset_orig_train[(dataset_orig_train['Income Binary'] == 0) & (dataset_orig_train[self.protected_attribute] == 1)]
                 df = df.append(df_zero_one)
                 self.df = df
+
+                self.df = self.situation_testing(self.df,"Income Binary","race")
 
                 self.df = StandardDataset( df=df, label_name='Income Binary', protected_attribute_names=['race'], favorable_classes=[1],
                     privileged_classes=[[1]])
@@ -175,6 +180,7 @@ class Fairsmote:
                 df = df.append(df_zero_zero)
                 self.df = df
 
+                self.df = self.situation_testing(self.df,"two_year_recid","sex")
 
                 self.df = StandardDataset( df=df, label_name='two_year_recid', protected_attribute_names=['sex'], favorable_classes=[0],
                     privileged_classes=[[1]])
@@ -226,6 +232,8 @@ class Fairsmote:
                 df = df.append(df_one_zero)
                 self.df = df
 
+                self.df = self.situation_testing(self.df,"two_year_recid","race")
+
                 self.df = StandardDataset( df=df, label_name='two_year_recid', protected_attribute_names=['race'], favorable_classes=[0],
                     privileged_classes=[[1]])
 
@@ -276,6 +284,8 @@ class Fairsmote:
                 df = df.append(df_one_one)
                 self.df = df
 
+                self.df = self.situation_testing(self.df,"credit","sex")
+
                 self.df = StandardDataset( df=df, label_name='credit', protected_attribute_names=['sex'], favorable_classes=[1],
                     privileged_classes=[[1]])
 
@@ -325,6 +335,7 @@ class Fairsmote:
                 df = df.append(df_one_one)
                 self.df = df
 
+                self.df = self.situation_testing(self.df,"credit","age")
 
                 self.df = StandardDataset( df=df, label_name='credit', protected_attribute_names=['sex'], favorable_classes=[1],
                     privileged_classes=[[1]])
@@ -375,3 +386,33 @@ class Fairsmote:
 
         return final_df
 
+    def situation_testing(self,df,label,protected_attribute):
+
+        df_privileged , df_unprivileged = [x for _, x in df.groupby(df[protected_attribute] == 0)]
+
+        df_privileged[protected_attribute] = 0
+
+        X_train_privileged, y_train_privileged = df_privileged.loc[:, df_privileged.columns != label], df_privileged[label]
+        X_train_unprivileged, y_train_unprivileged = df_unprivileged.loc[:, df_unprivileged.columns != label], df_unprivileged[label]
+        
+        clf_privileged = LogisticRegression(C=1.0, penalty='l2', solver='liblinear', max_iter=100)
+        clf_privileged.fit(X_train_privileged, y_train_privileged)
+        
+        clf_unprivileged = LogisticRegression(C=1.0, penalty='l2', solver='liblinear', max_iter=100)
+        clf_unprivileged.fit(X_train_unprivileged, y_train_unprivileged)
+
+
+        df_removed = pd.DataFrame(columns=df.columns)
+
+        for index,row in df.iterrows():
+            try:                
+                row_ = [row.values[0:len(row.values)-1]]
+                y_privileged = clf_privileged.predict(row_)
+                y_unprivileged = clf_unprivileged.predict(row_)
+                if y_privileged[0] != y_unprivileged[0]:        
+                    df_removed = df_removed.append(row, ignore_index=True)
+                    df = df.drop(index)
+            except:
+                continue
+                
+        return df
