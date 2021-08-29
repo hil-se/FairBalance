@@ -28,7 +28,7 @@ def one_exp(treatment, data, fair_balance, target="", repeats=50):
     print(medians)
     return results
 
-def RQ1():
+def RQ1(repeats = 50):
     # Perform an overall experiment on different algorithms, datasets, and FairBalance settings.
     treatments = ["LR", "SVM", "DT", "RF", "NB"]
     datasets = ["compas", "adult", "german"]
@@ -39,7 +39,7 @@ def RQ1():
         for dataset in datasets:
             results[treatment][dataset] = {}
             for balance in balances:
-                results[treatment][dataset][balance] = one_exp(treatment, dataset, balance, repeats=50)
+                results[treatment][dataset][balance] = one_exp(treatment, dataset, balance, repeats=repeats)
                 # Print progress
                 print(treatment+", "+dataset+", "+balance)
     # dump results
@@ -47,7 +47,7 @@ def RQ1():
         pickle.dump(results, p)
     parse_results_RQ1()
 
-def RQ3():
+def RQ3(repeats = 50):
     # Compare FairBalance against other soa baseline bias mitigation algorithms.
     # Classifier is fixed to logistic regression.
     treatment = "LR"
@@ -63,9 +63,9 @@ def RQ3():
             # Need target attribute
                 for target in targets[dataset]:
                     if balance == "RejectOptionClassification":
-                        results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target, repeats=10)
+                        results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target, repeats=min((10, repeats)))
                     else:
-                        results[dataset][balance + ": " + target] = one_exp(treatment, dataset, balance, target=target)
+                        results[dataset][balance + ": " + target] = one_exp(treatment, dataset, balance, target=target, repeats = repeats)
             else:
                 results[dataset][balance] = one_exp(treatment, dataset, balance)
             # Print progress
@@ -101,25 +101,43 @@ def parse_results_RQ1(iqr="True"):
 
 def parse_results_RQ3(iqr="True"):
     # Parse results of RQ3 and save as csv files.
+
+    def parse_RQ3(results, name, iqr="True"):
+        compares = copy.deepcopy(results)
+        for dataset in compares:
+            compares[dataset] = rank_dict(compares[dataset])
+        compare_df = dict2dfRQ3(compares)
+        compare_df.to_csv("../results/"+name+"_compare.csv", index=False)
+
+        # Calculate medians and iqrs of 50 repeats
+        medians = copy.deepcopy(results)
+        medians = median_dict(medians, use_iqr = iqr=="True")
+        median_df = dict2dfRQ3(medians)
+        median_df.to_csv("../results/"+name+"_median.csv", index=False)
+
+        # Combine the median csv
+        combined = combine(medians, compares)
+        combined_df = dict2dfRQ3(combined)
+        combined_df.to_csv("../results/"+name+"_combine.csv", index=False)
+
     with open("../dump/RQ3.pickle", "rb") as p:
         results = pickle.load(p)
+
     # Compare results of other treatments against FairBalance
-    compares = copy.deepcopy(results)
-    for dataset in compares:
-        compares[dataset] = rank_dict(compares[dataset])
-    compare_df = dict2dfRQ3(compares)
-    compare_df.to_csv("../results/RQ3_compare.csv", index=False)
+    parse_RQ3(results, "RQ3", iqr=iqr)
 
-    # Calculate medians and iqrs of 10 repeats
-    medians = copy.deepcopy(results)
-    medians = median_dict(medians, use_iqr = iqr=="True")
-    median_df = dict2dfRQ3(medians)
-    median_df.to_csv("../results/RQ3_median.csv", index=False)
+    # RQ3a
+    one_attribute = ['Reweighing: sex', 'Reweighing: race', 'Reweighing: age', 'Fair-SMOTE: sex', 'Fair-SMOTE: race', 'Fair-SMOTE: age', 'AdversialDebiasing: sex', 'AdversialDebiasing: race', 'AdversialDebiasing: age', 'RejectOptionClassification: sex'
+, 'RejectOptionClassification: race', 'RejectOptionClassification: age', 'FairBalance', 'FairBalanceClass']
+    compares = {result: {key: results[result][key] for key in one_attribute if key in results[result]} for result in results}
+    parse_RQ3(compares, "RQ3a", iqr=iqr)
 
-    # Combine the median csv
-    combined = combine(medians, compares)
-    combined_df = dict2dfRQ3(combined)
-    combined_df.to_csv("../results/RQ3_combine.csv", index=False)
+    # RQ3b
+    multiple_attribute = ["Fair-SMOTE-Multiple", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass"]
+    compares = {result: {key: results[result][key] for key in multiple_attribute} for result in results}
+    parse_RQ3(compares, "RQ3b", iqr=iqr)
+
+
 
 
 if __name__ == "__main__":

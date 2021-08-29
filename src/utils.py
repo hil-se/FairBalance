@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import copy
 from scipy.stats import mannwhitneyu
 try:
    import cPickle as pickle
@@ -56,7 +57,7 @@ def rank(samples, lower_better=True, thres = 2):
     order = np.argsort(medians)
     order = order if lower_better else order[::-1]
     baseline = samples[order[0]]
-    rank = 0
+    ranking = 0
     ranks = [0]
     for i in order[1:]:
         if lower_better:
@@ -64,9 +65,9 @@ def rank(samples, lower_better=True, thres = 2):
         else:
             better = is_larger(np.abs(baseline), np.abs(samples[i]))
         if better >= thres:
-            rank += 1
+            ranking += 1
             baseline = samples[i]
-        ranks.append(rank)
+        ranks.append(ranking)
     ordered_rank = ranks[:]
     for i, o in enumerate(order):
         ordered_rank[o] = ranks[i]
@@ -77,7 +78,6 @@ def rank(samples, lower_better=True, thres = 2):
 
 def rank_dict(results):
     # Rank each treatment based on statistical significance for each metric.
-
     treatments = list(results.keys())
     if len(treatments)==0:
         return results
@@ -90,6 +90,7 @@ def rank_dict(results):
                 to_compare = []
                 for treatment in treatments:
                     to_compare.append(results[treatment][key][key2])
+
                 ranks = rank(to_compare, lower_better)
                 for i, treatment in enumerate(treatments):
                     results[treatment][key][key2] = ranks[i]
