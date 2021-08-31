@@ -67,6 +67,8 @@ def rank(samples, lower_better=True, thres = 2):
         if better >= thres:
             ranking += 1
             baseline = samples[i]
+        else:
+            baseline.extend(samples[i])
         ranks.append(ranking)
     ordered_rank = ranks[:]
     for i, o in enumerate(order):

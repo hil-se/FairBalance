@@ -14,6 +14,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import StandardScaler
 from collections import Counter
 from fairbalance import FairBalance
+from fairbalance import Reweighing_multiple
 from fermi import FERMI
 from aif360.algorithms.inprocessing.adversarial_debiasing import AdversarialDebiasing
 import tensorflow.compat.v1 as tf
@@ -68,6 +69,9 @@ class Experiment:
         elif self.fair_balance=="Fair-SMOTE-Multiple":  
             fs = FairsmoteMultiple(df = data_train, df_name = self.dataset_name)    
             dataset_transf_train = fs.run_fairsmote_multiple()
+
+        elif self.fair_balance=="Reweighing-Multiple":
+            dataset_transf_train = Reweighing_multiple(data_train)
             
         else:
             dataset_transf_train = data_train

@@ -52,14 +52,14 @@ def RQ3(repeats = 50):
     # Classifier is fixed to logistic regression.
     treatment = "LR"
     datasets = ["compas", "adult", "german"]
-    balances = ["Reweighing", "Fair-SMOTE", "Fair-SMOTE-Multiple", "AdversialDebiasing", "RejectOptionClassification", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass"]
+    balances = ["Reweighing", "Reweighing-Multiple", "Fair-SMOTE", "Fair-SMOTE-Multiple", "AdversialDebiasing", "RejectOptionClassification", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass"]
     targets = {"compas": ["sex", "race"], "adult": ["sex", "race"], "german": ["sex", "age"]}
     results = {}
 
     for dataset in datasets:
         results[dataset] = {}
         for balance in balances:
-            if "FairBalance" not in balance and "FERMI" not in balance and balance!="Fair-SMOTE-Multiple":
+            if "FairBalance" not in balance and "FERMI" not in balance and "Multiple" not in balance:
             # Need target attribute
                 for target in targets[dataset]:
                     if balance == "RejectOptionClassification":
@@ -133,7 +133,7 @@ def parse_results_RQ3(iqr="True"):
     parse_RQ3(compares, "RQ3a", iqr=iqr)
 
     # RQ3b
-    multiple_attribute = ["Fair-SMOTE-Multiple", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass"]
+    multiple_attribute = ["Fair-SMOTE-Multiple", "FERMI30K", "FERMI10K", "Reweighing-Multiple", "FairBalance", "FairBalanceClass"]
     compares = {result: {key: results[result][key] for key in multiple_attribute} for result in results}
     parse_RQ3(compares, "RQ3b", iqr=iqr)
 
