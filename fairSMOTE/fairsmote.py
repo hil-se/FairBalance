@@ -1,19 +1,11 @@
 from __future__ import print_function, division
-from collections import Counter
-from scipy.spatial import distance as dist
-from scipy.spatial import distance
+
 from sklearn.neighbors import NearestNeighbors as NN
 from aif360.datasets import StandardDataset
 from sklearn.linear_model import LogisticRegression
 
 import pandas as pd
-import random,time,csv
-import numpy as np
-import math,copy,os
 
-import sys
-import pdb
-import unittest
 import random
 
 
