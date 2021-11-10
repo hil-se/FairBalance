@@ -142,13 +142,16 @@ def compare_dict(results, baseline="None"):
             y[key] = "n/a"
     return results
 
-def median_dict(results, use_iqr = True):
+def median_dict(results, use_iqr = True, abs = False):
     # Compute median value of lists in the dictionary
     for key in results:
         if type(results[key]) == dict:
-            results[key] = median_dict(results[key], use_iqr = use_iqr)
+            results[key] = median_dict(results[key], use_iqr = use_iqr, abs = abs)
         else:
-            med = np.median(results[key])
+            if abs:
+                med = np.median(np.abs(results[key]))
+            else:
+                med = np.median(results[key])
             if use_iqr:
                 iqr = np.percentile(results[key],75)-np.percentile(results[key],25)
                 results[key] = "%d (%d)" % (med*100, iqr*100)

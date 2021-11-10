@@ -99,10 +99,12 @@ def parse_results_RQ1(iqr="True"):
     colored_df.to_csv("../results/RQ1_color.csv", index=False)
 
 
-def parse_results_RQ3(iqr="True"):
+def parse_results_RQ3(iqr="True", abs ="False"):
     # Parse results of RQ3 and save as csv files.
+    # iqr == "True" shows iqrs in brackets (75th percentile - 25th percentile)
+    # abs == "True" presents absolute values of median results
 
-    def parse_RQ3(results, name, iqr="True"):
+    def parse_RQ3(results, name, iqr="True", abs = "False"):
         compares = copy.deepcopy(results)
         for dataset in compares:
             compares[dataset] = rank_dict(compares[dataset])
@@ -111,7 +113,7 @@ def parse_results_RQ3(iqr="True"):
 
         # Calculate medians and iqrs of 50 repeats
         medians = copy.deepcopy(results)
-        medians = median_dict(medians, use_iqr = iqr=="True")
+        medians = median_dict(medians, use_iqr = iqr=="True", abs = abs=="True")
         median_df = dict2dfRQ3(medians)
         median_df.to_csv("../results/"+name+"_median.csv", index=False)
 
@@ -124,18 +126,21 @@ def parse_results_RQ3(iqr="True"):
         results = pickle.load(p)
 
     # Compare results of other treatments against FairBalance
-    parse_RQ3(results, "RQ3", iqr=iqr)
+    name = "RQ3_abs" if abs == "True" else "RQ3"
+    parse_RQ3(results, name, iqr=iqr, abs=abs)
 
     # RQ3a
     one_attribute = ['Reweighing: sex', 'Reweighing: race', 'Reweighing: age', 'Fair-SMOTE: sex', 'Fair-SMOTE: race', 'Fair-SMOTE: age', 'AdversialDebiasing: sex', 'AdversialDebiasing: race', 'AdversialDebiasing: age', 'RejectOptionClassification: sex'
 , 'RejectOptionClassification: race', 'RejectOptionClassification: age', 'FairBalance', 'FairBalanceClass']
     compares = {result: {key: results[result][key] for key in one_attribute if key in results[result]} for result in results}
-    parse_RQ3(compares, "RQ3a", iqr=iqr)
+    name = "RQ3a_abs" if abs == "True" else "RQ3a"
+    parse_RQ3(compares, name, iqr=iqr, abs=abs)
 
     # RQ3b
     multiple_attribute = ["Fair-SMOTE-Multiple", "FERMI30K", "FERMI10K", "Reweighing-Multiple", "FairBalance", "FairBalanceClass"]
     compares = {result: {key: results[result][key] for key in multiple_attribute} for result in results}
-    parse_RQ3(compares, "RQ3b", iqr=iqr)
+    name = "RQ3b_abs" if abs == "True" else "RQ3b"
+    parse_RQ3(compares, name, iqr=iqr, abs=abs)
 
 
 
