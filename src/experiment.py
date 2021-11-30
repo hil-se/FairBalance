@@ -15,6 +15,7 @@ from sklearn.preprocessing import StandardScaler
 from collections import Counter
 from fairbalance import FairBalance
 from fairbalance import Reweighing_multiple
+from fairbalance import FairBalance2
 from fermi import FERMI
 from aif360.algorithms.inprocessing.adversarial_debiasing import AdversarialDebiasing
 import tensorflow.compat.v1 as tf
@@ -57,6 +58,8 @@ class Experiment:
             dataset_transf_train = FairBalance(data_train, class_balance=False)
         elif self.fair_balance=="FairBalanceClass":
             dataset_transf_train = FairBalance(data_train, class_balance=True)
+        elif self.fair_balance=="FairBalance2Class":
+            dataset_transf_train = FairBalance2(data_train, class_balance=True)
         elif self.fair_balance=="Reweighing":
             RW = Reweighing(unprivileged_groups=unprivileged_groups,
                             privileged_groups=privileged_groups)
