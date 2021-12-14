@@ -28,7 +28,7 @@ def one_exp(treatment, data, fair_balance, target="", repeats=50):
     print(medians)
     return results
 
-def RQ1(repeats = 50):
+def RQ1(repeats = 1):
     # Perform an overall experiment on different algorithms, datasets, and FairBalance settings.
     treatments = ["LR", "SVM", "DT", "RF", "NB"]
     datasets = ["compas", "adult", "german"]
