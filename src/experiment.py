@@ -22,6 +22,10 @@ import tensorflow.compat.v1 as tf
 from fairSMOTE.fairsmote import Fairsmote
 from fairSMOTE.fairsmoteMultiple import FairsmoteMultiple
 
+try:
+   import cPickle as pickle
+except:
+   import pickle
 
 tf.disable_eager_execution()
 
@@ -182,6 +186,15 @@ class Experiment:
             result[key] = {}
             group1 = X_test.protected_attributes[:,i] == 1
             group0 = X_test.protected_attributes[:,i] == 0
+            ###############
+            tmp_result = {}
+            tmp_result["y0"] = truth[group0]
+            tmp_result["y1"] = truth[group1]
+            tmp_result["y0_pred"] = preds[group0]
+            tmp_result["y1_pred"] = preds[group1]
+            with open("../dump/tmp_result.pickle", "wb") as p:
+                pickle.dump(tmp_result, p)
+            ###############
             tp1 = tp & group1
             fp1 = fp & group1
             tn1 = tn & group1

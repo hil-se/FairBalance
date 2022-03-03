@@ -23,21 +23,24 @@ def FairBalance(data, class_balance = False):
     return weighted_data
 
 # Balance training data in a simpler way
-def FairBalance2(data, class_balance = False):
+def ClassBalance(data):
     y = data.labels.ravel()
-    m, n = data.protected_attributes.shape
-    groups = []
-    for i in range(n):
-        groups.append(Counter(data.protected_attributes[:,i]))
-    classes = Counter(y)
-    weighted_data = copy.deepcopy(data)
+    grouping = {}
+    groups_only = {}
     for i, label in enumerate(y):
-        weight = 1
-        if class_balance:
-            weight /= classes[label]
-        for j in range(n):
-            weight /= groups[j][data.protected_attributes[i,j]]
-        weighted_data.instance_weights[i] = weight
+        key = tuple(list(data.protected_attributes[i]) + [label])
+        key_group_only = tuple(list(data.protected_attributes[i]))
+        if key not in grouping:
+            grouping[key] = []
+        grouping[key].append(i)
+        if key_group_only not in groups_only:
+            groups_only[key_group_only] = []
+        groups_only[key_group_only].append(i)
+    weighted_data = copy.deepcopy(data)
+    for key in grouping:
+        weight = len(groups_only[key[:-1]]) / len(grouping[key])
+        for i in grouping[key]:
+            weighted_data.instance_weights[i] = weight
     # Rescale the total weights to len(y)
     weighted_data.instance_weights = weighted_data.instance_weights * len(y) / sum(weighted_data.instance_weights)
     return weighted_data
