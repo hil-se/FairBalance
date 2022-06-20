@@ -1,149 +1,49 @@
-from demos import cmd
-import copy
-try:
-   import cPickle as pickle
-except:
-   import pickle
-from utils import *
-from experiment import Experiment
+from exp import Exp
+import pandas as pd
+import numpy as np
+from stats import is_larger, statics, ranking
+import time
 
-
-def one_exp(treatment, data, fair_balance, target="", repeats=50):
-    # Conduct one experiment:
-    #     treatment in {"SVM", "RF", "LR", "DT"}
-    #     data in {"compas", "adult", "german"}
-    #     fair_balance in {"None", "FairBalance", "Reweighing", "AdversialDebiasing", "FERMI", "RejectOptionClassification"}
-    #     target = target protected attribute, not used if fair_balance == "FairBalance", "FairBalanceClass" or "None"
-    #     repeats = number of times repeating the experiments
-
-    exp = Experiment(treatment, data=data, fair_balance=fair_balance, target_attribute=target)
-    results = {}
-    for _ in range(repeats):
-        result = exp.run()
-        if result:
-            results = merge_dict(results, result)
-    print(results)
-    medians = copy.deepcopy(results)
-    medians = median_dict(medians, use_iqr=True)
-    print(medians)
-    return results
-
-def RQ1(repeats = 50):
-    # Perform an overall experiment on different algorithms, datasets, and FairBalance settings.
-    treatments = ["LR", "SVM", "DT", "RF", "NB"]
-    datasets = ["compas", "adult", "german"]
-    balances = ["None", "FairBalance", "FairBalanceClass"]
-    results = {}
-    for treatment in treatments:
-        results[treatment] = {}
-        for dataset in datasets:
-            results[treatment][dataset] = {}
-            for balance in balances:
-                results[treatment][dataset][balance] = one_exp(treatment, dataset, balance, repeats=repeats)
-                # Print progress
-                print(treatment+", "+dataset+", "+balance)
-    # dump results
-    with open("../dump/RQ1.pickle", "wb") as p:
-        pickle.dump(results, p)
-    parse_results_RQ1()
-
-def RQ3(repeats = 50):
-    # Compare FairBalance against other soa baseline bias mitigation algorithms.
-    # Classifier is fixed to logistic regression.
-    treatment = "LR"
-    datasets = ["compas", "adult", "german"]
-    balances = ["Reweighing", "Reweighing-Multiple", "Fair-SMOTE", "Fair-SMOTE-Multiple", "AdversialDebiasing", "RejectOptionClassification", "FERMI30K", "FERMI10K", "FairBalance", "FairBalanceClass"]
-    targets = {"compas": ["sex", "race"], "adult": ["sex", "race"], "german": ["sex", "age"]}
-    results = {}
-
-    for dataset in datasets:
-        results[dataset] = {}
-        for balance in balances:
-            if "FairBalance" not in balance and "FERMI" not in balance and "Multiple" not in balance:
-            # Need target attribute
-                for target in targets[dataset]:
-                    if balance == "RejectOptionClassification":
-                        results[dataset][balance+": "+target] = one_exp(treatment, dataset, balance, target=target, repeats=min((10, repeats)))
-                    else:
-                        results[dataset][balance + ": " + target] = one_exp(treatment, dataset, balance, target=target, repeats = repeats)
-            else:
-                results[dataset][balance] = one_exp(treatment, dataset, balance)
-            # Print progress
-            print(dataset + ", " + balance)
-    # dump results
-    with open("../dump/RQ3.pickle", "wb") as p:
-        pickle.dump(results, p)
-    parse_results_RQ3()
-
-def parse_results_RQ1(iqr="True"):
-    # Parse results of RQ1 and save as csv files.
-    with open("../dump/RQ1.pickle", "rb") as p:
-        results = pickle.load(p)
-    # Compare results of FairBalance against None
-    compares = copy.deepcopy(results)
-    for treatment in compares:
-        for dataset in compares[treatment]:
-            compares[treatment][dataset] = compare_dict(compares[treatment][dataset], baseline = "None")
-    compare_df = dict2dfRQ1(compares)
-    compare_df.to_csv("../results/RQ1_compare.csv", index=False)
-
-    # Calculate medians and iqrs of 50 repeats
-    medians = copy.deepcopy(results)
-    medians = median_dict(medians, use_iqr = iqr=="True")
-    median_df = dict2dfRQ1(medians)
-    median_df.to_csv("../results/RQ1_median.csv", index=False)
-
-    # Color the median csv
-    colored = color(medians, compares)
-    colored_df = dict2dfRQ1(colored)
-    colored_df.to_csv("../results/RQ1_color.csv", index=False)
-
-
-def parse_results_RQ3(iqr="True", abs ="False"):
-    # Parse results of RQ3 and save as csv files.
-    # iqr == "True" shows iqrs in brackets (75th percentile - 25th percentile)
-    # abs == "True" presents absolute values of median results
-
-    def parse_RQ3(results, name, iqr="True", abs = "False"):
-        compares = copy.deepcopy(results)
-        for dataset in compares:
-            compares[dataset] = rank_dict(compares[dataset])
-        compare_df = dict2dfRQ3(compares)
-        compare_df.to_csv("../results/"+name+"_compare.csv", index=False)
-
-        # Calculate medians and iqrs of 50 repeats
-        medians = copy.deepcopy(results)
-        medians = median_dict(medians, use_iqr = iqr=="True", abs = abs=="True")
-        median_df = dict2dfRQ3(medians)
-        median_df.to_csv("../results/"+name+"_median.csv", index=False)
-
-        # Combine the median csv
-        combined = combine(medians, compares)
-        combined_df = dict2dfRQ3(combined)
-        combined_df.to_csv("../results/"+name+"_combine.csv", index=False)
-
-    with open("../dump/RQ3.pickle", "rb") as p:
-        results = pickle.load(p)
-
-    # Compare results of other treatments against FairBalance
-    name = "RQ3_abs" if abs == "True" else "RQ3"
-    parse_RQ3(results, name, iqr=iqr, abs=abs)
-
-    # RQ3a
-    one_attribute = ['Reweighing: sex', 'Reweighing: race', 'Reweighing: age', 'Fair-SMOTE: sex', 'Fair-SMOTE: race', 'Fair-SMOTE: age', 'AdversialDebiasing: sex', 'AdversialDebiasing: race', 'AdversialDebiasing: age', 'RejectOptionClassification: sex'
-, 'RejectOptionClassification: race', 'RejectOptionClassification: age', 'FairBalance', 'FairBalanceClass']
-    compares = {result: {key: results[result][key] for key in one_attribute if key in results[result]} for result in results}
-    name = "RQ3a_abs" if abs == "True" else "RQ3a"
-    parse_RQ3(compares, name, iqr=iqr, abs=abs)
-
-    # RQ3b
-    multiple_attribute = ["Fair-SMOTE-Multiple", "FERMI30K", "FERMI10K", "Reweighing-Multiple", "FairBalance", "FairBalanceClass"]
-    compares = {result: {key: results[result][key] for key in multiple_attribute} for result in results}
-    name = "RQ3b_abs" if abs == "True" else "RQ3b"
-    parse_RQ3(compares, name, iqr=iqr, abs=abs)
-
-
-
+def run(data, repeat = 50, seed = 0):
+    np.random.seed(seed)
+    treatments = ["None", "FERMI", "Reweighing", "FairBalance", "FairBalanceVariant"]
+    metrics = ["Accuracy", "F1 Minority", "EOD", "AOD", "Runtime"]
+    columns = ["Treatment"] + metrics
+    test_result = {column: [] for column in columns}
+    for treat in treatments:
+        test_result["Treatment"].append(treat)
+        test_accuracy = []
+        test_f1 = []
+        test_eod = []
+        test_aod = []
+        test_time = []
+        for i in range(repeat):
+            t1 = time.time()
+            exp = Exp(data = data, treatment = treat)
+            m_train, m_test = exp.one_exp()
+            runtime = time.time() - t1
+            test_accuracy.append(m_test.accuracy())
+            test_f1.append(m_test.f1_minority())
+            test_eod.append(m_test.eod())
+            test_aod.append(m_test.aod())
+            test_time.append(runtime)
+        test_result["Accuracy"].append(test_accuracy)
+        test_result["F1 Minority"].append(test_f1)
+        test_result["EOD"].append(test_eod)
+        test_result["AOD"].append(test_aod)
+        test_result["Runtime"].append(test_time)
+    for key in metrics:
+        if key == "Accuracy" or key == "F1 Minority":
+            rank = ranking(test_result[key], better="higher")
+        else:
+            rank = ranking(test_result[key], better="lower")
+        test_result[key] = ["r%d: %.2f (%.2f)" %(rank[i], np.median(test_result[key][i]), np.quantile(test_result[key][i], 0.75)-np.quantile(test_result[key][i], 0.25)) for i in range(len(test_result[key]))]
+    df_test = pd.DataFrame(test_result, columns=columns)
+    df_test.to_csv("../results/" + data + ".csv", index=False)
 
 if __name__ == "__main__":
-    eval(cmd())
+    seed = 0
+    repeat = 50
+    datasets = ["synthetic1", "synthetic2", "synthetic3", "adult", "compas", "heart", "bank"]
+    for data in datasets:
+        run(data, repeat = repeat, seed=seed)

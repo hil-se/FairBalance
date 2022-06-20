@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.sparse import csr_matrix
 
 # [1] Lowy, Andrew, Rakesh Pavan, Sina Baharlouei, Meisam Razaviyayn, and Ahmad Beirami. "FERMI: Fair Empirical Risk Minimization via Exponential R\'enyi Mutual Information." arXiv preprint arXiv:2102.12586 (2021).
 # Reproduced with code at: https://github.com/optimization-for-data-driven-science/FERMI
@@ -16,10 +17,12 @@ class FERMI:
     def sigmoid(self, x):  # P(Y = 1 | X, \theta) Input: X\theta
         return 1.0 / (1.0 + np.exp(-x))
 
-    def fit(self, X, y, S, sample_weight=[]):
+    def fit(self, X, y, S, sample_weight=None):
+        if type(X)==csr_matrix:
+            X = X.toarray()
         n, d = X.shape
         self.theta = np.zeros((d, 1))
-        if len(sample_weight) == 0:
+        if sample_weight is None:
             sample_weight = np.array([1]*len(y))
 
         # Computing the gradient of regularizer
@@ -78,13 +81,15 @@ class FERMI:
 
 
     def predict_proba(self, X):
+        if type(X)==csr_matrix:
+            X = X.toarray()
         logits = np.dot(X, self.theta)
         probs = self.sigmoid(logits)
         return probs
 
     def predict(self, X):
         probs = self.predict_proba(X)
-        preds = [1 if p>=0.5 else 0 for p in probs]
+        preds = np.array([1 if p>=0.5 else 0 for p in probs])
         return preds
 
 
