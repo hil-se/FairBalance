@@ -27,6 +27,18 @@ class Metrics:
     def accuracy(self):
         return Counter(self.y==self.y_pred)[True] / len(self.y)
 
+    def f1_minority(self):
+        target1 = Counter(self.y)[1] <= Counter(self.y)[0]
+        conf = self.confusion()
+        if target1:
+            tpr = conf['tp'] / (conf['tp'] + conf['fn'])
+            prec = conf['tp'] / (conf['tp'] + conf['fp'])
+        else:
+            tpr = conf['tn'] / (conf['tn'] + conf['fp'])
+            prec = conf['tn'] / (conf['tn'] + conf['fn'])
+        f1 = 2*tpr*prec/(tpr+prec)
+        return f1
+
     def tprs(self):
         tprs = {}
         for group in self.groups:
@@ -146,45 +158,6 @@ class Metrics:
                 diffs[group] = diff
             return max(diffs.values()) - min(diffs.values())
 
-    def cross_eod(self, a):
-        ind0 = np.where(self.X[a] == 0)[0]
-        ind1 = np.where(self.X[a] == 1)[0]
-
-        eoda = self.pairwise_tpr(self.y[ind1], self.y[ind0], self.y_pred[ind1], self.y_pred[ind0]) - self.pairwise_tpr(
-            self.y[ind0], self.y[ind1], self.y_pred[ind0], self.y_pred[ind1])
-        return eoda
-
-    def cross_fod(self, a):
-        ind0 = np.where(self.X[a] == 0)[0]
-        ind1 = np.where(self.X[a] == 1)[0]
-        foda = self.pairwise_fpr(self.y[ind1], self.y[ind0], self.y_pred[ind1], self.y_pred[ind0]) - self.pairwise_fpr(
-            self.y[ind0], self.y[ind1], self.y_pred[ind0], self.y_pred[ind1])
-        return foda
-
-    def cross_aod(self, a):
-        return 0.5*(self.cross_eod(a)+self.cross_fod(a))
-
-    def pairwise_tpr(self, y0, y1, y0_pred, y1_pred):
-        t = 0
-        tp = 0
-        for i in range(len(y0)):
-            for j in range(len(y1)):
-                if y0[i] > y1[j]:
-                    t += 1
-                    if y0_pred[i] > y1_pred[j]:
-                        tp += 1
-        return float(tp) / t
-
-    def pairwise_fpr(self, y0, y1, y0_pred, y1_pred):
-        n = 0
-        fp = 0
-        for i in range(len(y0)):
-            for j in range(len(y1)):
-                if y0[i] < y1[j]:
-                    n += 1
-                    if y0_pred[i] > y1_pred[j]:
-                        fp += 1
-        return float(fp) / n
 
 
 
