@@ -1,4 +1,4 @@
-### Generalized Pairwise Fairness for Regression and Classification
+### Fairer Machine Learning Software on Multiple Sensitive Attributes With Data Preprocessing
 
 #### Usage
 0. Install dependencies:
