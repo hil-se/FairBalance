@@ -1,4 +1,4 @@
-### Fairer Machine Learning Software on Multiple Sensitive Attributes With Data Preprocessing
+### Generalized Pairwise Fairness for Regression and Classification
 
 #### Usage
 0. Install dependencies:
