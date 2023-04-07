@@ -27,6 +27,10 @@ def Reweighing(X, y, A):
     sample_weight = sample_weight * len(y) / sum(sample_weight)
     return sample_weight
 
+
+
+
+
 def FairBalance(X, y, A):
     # X: independent variables (2-d pd.DataFrame)
     # y: the dependent variable (1-d np.array)
@@ -44,12 +48,14 @@ def FairBalance(X, y, A):
         groups_class[key_class].append(i)
     sample_weight = np.array([1.0]*len(y))
     for key in groups_class:
-        weight = group_weight[key[:-1]]/len(groups_class[key])
+        weight = group_weight[key[:-1]]/len(groups_class[key])/2
         for i in groups_class[key]:
             sample_weight[i] = weight
+
     # Rescale the total weights to len(y)
-    sample_weight = sample_weight * len(y) / sum(sample_weight)
+    # sample_weight = sample_weight * len(y) / sum(sample_weight)
     return sample_weight
+
 
 def FairBalanceVariant(X, y, A):
     # X: independent variables (2-d pd.DataFrame)
@@ -66,6 +72,7 @@ def FairBalanceVariant(X, y, A):
         weight = 1.0/len(groups_class[key])
         for i in groups_class[key]:
             sample_weight[i] = weight
+    # sample_weight = sample_weight**2
     # Rescale the total weights to len(y)
     sample_weight = sample_weight * len(y) / sum(sample_weight)
     return sample_weight

@@ -28,36 +28,3 @@ def is_larger(x, y):
             return 2
         else:
             return 3
-
-def statics(result, better="lower"):
-    if better == "higher":
-        result = 1.0 - np.array(result)
-    medians = [np.median(r) for r in result]
-    best = np.argmin(medians)
-    rank = []
-    for i in range(len(result)):
-        if i==best:
-            diff = 0
-        else:
-            diff = is_larger(result[i], result[best])
-        rank.append(diff)
-    return rank
-
-def ranking(result, better="lower"):
-    if better == "higher":
-        result = (1.0 - np.array(result)).tolist()
-    medians = [np.median(r) for r in result]
-    order = np.argsort(medians)
-    rankings = [0]*len(order)
-    rank = 0
-    pre = []
-    for i, id in enumerate(order):
-        if i==0:
-            pre.extend(result[id])
-        else:
-            diff = is_larger(result[id], pre)
-            if diff > 1:
-                rank += 1
-                pre = result[id]
-        rankings[id] = rank
-    return rankings
