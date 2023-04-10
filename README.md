@@ -1,4 +1,4 @@
-### Fairer Machine Learning Software on Multiple Sensitive Attributes With Data Preprocessing
+### FairBalance: How to Achieve Equalized Odds With Data Pre-processing
 
 #### Usage
 0. Install dependencies:
@@ -9,7 +9,7 @@ pip install -r requirements.txt
 ```
 cd src
 ```
-2. Run experiments on all seven datasets:
+2. Run experiments on all eight datasets:
 ```
 python main.py
 ```
