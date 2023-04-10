@@ -1,8 +1,11 @@
 ### FairBalance: How to Achieve Equalized Odds With Data Pre-processing
 
 #### Data
-Data files can be found under https://github.com/hil-se/FairBalance/tree/main/data. Most of the datasets are originally from [UCI data repository](https://archive.ics.uci.edu/ml/datasets.php)
-.
+Data files can be found under https://github.com/hil-se/FairBalance/tree/main/data. Most of the datasets are originally from [UCI data repository](https://archive.ics.uci.edu/ml/datasets.php).
+
+#### Algorithm
+The FairBalance algorithm is implemented in https://github.com/hil-se/FairBalance/blob/main/src/preprocessor.py.
+
 #### Usage
 0. Install dependencies:
 ```
