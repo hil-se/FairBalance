@@ -1,4 +1,7 @@
 .idea/
+*.h5
+face/src/checkpoint/*
+face/src/log/*
 
 # Created by https://www.gitignore.io/api/macos,linux,django,python,pycharm
 
