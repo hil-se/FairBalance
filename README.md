@@ -21,3 +21,5 @@ python main.py
 ```
 3. Results are stored in separate csv files under https://github.com/hil-se/FairBalance/tree/main/results.
 
+#### Experiment with [FaceBeauty data](face_beauty/)
+
