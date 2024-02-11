@@ -1,4 +1,4 @@
-# Relative Fairness Testing
+# FairBalance experiments on the face beauty data
 
 #### Data (included in the [data/](./data/) folder)
 
